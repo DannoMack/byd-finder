@@ -1,10 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import RatehubWidget from '../../components/RatehubWidget.astro';
 
 interface FAQItem {
   q: string;
   a: string;
+  showRatehub?: boolean;
 }
 interface FAQSection {
   id: string;
@@ -118,6 +120,21 @@ const sections: FAQSection[] = [
     ],
   },
   {
+    id: 'insurance',
+    heading: 'Insurance & costs',
+    items: [
+      {
+        q: 'Will insuring a BYD be expensive in Canada?',
+        a: 'New nameplate, new data. Canadian insurers set premiums based on claims history and repair costs, and BYD has neither in Canada yet. Expect quotes in the first 12 months to land 10 to 25 percent above comparable Hyundai or Kia EVs while insurers calibrate. After two claim seasons the premium should normalize. Run a free comparison before buying so you know what you\'re walking into.',
+        showRatehub: true,
+      },
+      {
+        q: 'What will ownership cost per month?',
+        a: 'Rough ballpark for a mid-trim Atto 3: $550 to $750 / month all-in at current rate estimates. That includes an 84-month finance payment on a $44,000 vehicle at 7% APR, $175/month insurance, $40/month home charging electricity, and $30/month for tires, wiper blades, and cabin filters. Your numbers vary by province and driving profile.',
+      },
+    ],
+  },
+  {
     id: 'company',
     heading: 'About BYD',
     items: [
@@ -163,13 +180,16 @@ const sections: FAQSection[] = [
         <h2 class="text-xl font-semibold text-[var(--color-ink)] mb-4">{section.heading}</h2>
         <div class="space-y-3">
           {section.items.map((item) => (
-            <details class="group rounded-xl border border-[var(--color-border)] bg-white p-5 [&[open]]:border-[var(--color-ink)]">
-              <summary class="cursor-pointer font-semibold text-[var(--color-ink)] list-none flex items-start justify-between gap-4">
-                <span>{item.q}</span>
-                <span class="text-[var(--color-muted)] text-xl leading-none group-open:rotate-45 transition-transform">+</span>
-              </summary>
-              <p class="mt-3 text-[var(--color-ink-soft)] leading-relaxed">{item.a}</p>
-            </details>
+            <>
+              <details class="group rounded-xl border border-[var(--color-border)] bg-white p-5 [&[open]]:border-[var(--color-ink)]">
+                <summary class="cursor-pointer font-semibold text-[var(--color-ink)] list-none flex items-start justify-between gap-4">
+                  <span>{item.q}</span>
+                  <span class="text-[var(--color-muted)] text-xl leading-none group-open:rotate-45 transition-transform">+</span>
+                </summary>
+                <p class="mt-3 text-[var(--color-ink-soft)] leading-relaxed">{item.a}</p>
+              </details>
+              {item.showRatehub && <RatehubWidget />}
+            </>
           ))}
         </div>
       </section>
