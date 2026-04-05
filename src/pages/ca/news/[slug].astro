@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../../components/NewsletterSignup.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('news');
+  // Only editorial pieces get their own page; aggregated items link out.
+  return items
+    .filter((i) => i.data.editorial)
+    .map((i) => ({ params: { slug: i.id }, props: { entry: i } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const dateStr = entry.data.publishedAt.toLocaleDateString('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<BaseLayout title={entry.data.title} description={entry.data.summary}>
+  <article class="max-w-3xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="mb-6">
+      <a href="/ca/news" class="text-sm text-[var(--color-accent)] hover:underline">&larr; All news</a>
+    </div>
+    <div class="text-xs text-[var(--color-muted)] uppercase tracking-wider font-medium">
+      <span class="text-[var(--color-accent)]">{entry.data.source}</span>
+      <span aria-hidden="true">&middot;</span>
+      <time datetime={entry.data.publishedAt.toISOString()}>{dateStr}</time>
+    </div>
+    <h1 class="mt-2 text-3xl md:text-5xl font-semibold tracking-tight leading-tight text-[var(--color-ink)]">
+      {entry.data.title}
+    </h1>
+    <p class="mt-4 text-lg text-[var(--color-ink-soft)] leading-relaxed">{entry.data.summary}</p>
+    <div class="prose-article mt-8">
+      <Content />
+    </div>
+    <div class="mt-12">
+      <NewsletterSignup variant="inline" />
+    </div>
+  </article>
+</BaseLayout>

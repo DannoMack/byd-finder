@@ -2,11 +2,12 @@
 title: "Winterizing your BYD in Canada: what actually matters"
 summary: "Canadian winters demand different prep than Chinese winters. Road salt is the real enemy, not the cold. Here's how to protect your BYD EV through a Canadian winter."
 source: "BYD Finder Editorial"
-sourceUrl: "https://bydfinder.com/ca/news/winterizing-byd-ev-canada"
+sourceUrl: "https://bydfinder.com/ca/news/2026-04-05-winterizing-byd-ev-canada"
 author: "BYD Finder Editorial"
 publishedAt: 2026-04-05
 tags: ["winter", "ownership", "canada", "editorial"]
 country: "ca"
+editorial: true
 ---
 
 When BYD launches the Dolphin, Atto 3, Seal, and Sealion 7 in Canada later this year, thousands of Canadian drivers will face their first winter with a Chinese-built EV. The cold is not the problem. The salt is.
@@ -85,4 +86,3 @@ Install a weatherproof port cover. Generic covers for CCS1 and Type 2 ports cost
 
 Canadian winters are tougher on EVs than Chinese winters are, not because of the cold but because of the salt. BYDs built in Hefei know how to handle minus 30. Canadian roads are the harder test. Start preparing in September.
 
-[Read the full article at BYD Finder](https://bydfinder.com/ca/news/winterizing-byd-ev-canada)

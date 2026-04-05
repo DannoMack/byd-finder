@@ -68,13 +68,13 @@ const models = (await getCollection('models'))
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {topNews.map((item) => (
           <NewsCard
-            href={item.data.sourceUrl}
+            href={item.data.editorial ? `/ca/news/${item.id}` : item.data.sourceUrl}
             title={item.data.title}
             summary={item.data.summary}
             source={item.data.source}
             publishedAt={item.data.publishedAt}
             image={item.data.image}
-            external={true}
+            external={!item.data.editorial}
           />
         ))}
       </div>

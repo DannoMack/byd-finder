@@ -13,6 +13,7 @@ const news = defineCollection({
     image: z.string().url().optional(),
     tags: z.array(z.string()).default([]),
     country: z.enum(['ca', 'global']).default('global'),
+    editorial: z.boolean().default(false),
   }),
 });
 
