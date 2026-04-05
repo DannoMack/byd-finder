@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+
+// Dealership tracker — cities being scouted + confirmed locations
+// Update this as BYD Canada announces dealers.
+interface DealerArea {
+  city: string;
+  province: string;
+  status: 'scouting' | 'confirmed' | 'planned';
+  notes: string;
+}
+
+const dealerAreas: DealerArea[] = [
+  { city: 'Toronto (GTA)', province: 'ON', status: 'scouting', notes: 'Three GTA sites under discussion via Dealer Solutions M&A (Markham, ON). Launch priority market.' },
+  { city: 'Vancouver', province: 'BC', status: 'planned', notes: 'Part of BYD\'s phase-two expansion after Toronto launch.' },
+  { city: 'Montreal', province: 'QC', status: 'planned', notes: 'Part of BYD\'s phase-two expansion. French-language retail requirements apply.' },
+  { city: 'Calgary', province: 'AB', status: 'planned', notes: 'Phase-two expansion target.' },
+  { city: 'Ottawa', province: 'ON', status: 'planned', notes: 'Expected in Ontario rollout after GTA establishment.' },
+];
+
+const statusStyles: Record<DealerArea['status'], string> = {
+  confirmed: 'bg-green-100 text-green-800',
+  scouting: 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]',
+  planned: 'bg-[var(--color-ink)]/10 text-[var(--color-ink-soft)]',
+};
+
+const statusLabel: Record<DealerArea['status'], string> = {
+  confirmed: 'Confirmed',
+  scouting: 'Scouting',
+  planned: 'Planned',
+};
+---
+<BaseLayout
+  title="BYD Canada Dealers — locations, launch cities, timeline"
+  description="Where BYD's Canadian dealerships are opening — confirmed locations, cities being scouted, and launch timeline. Updated as announcements drop."
+>
+  <section class="max-w-5xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="mb-10">
+      <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">Find a BYD dealer</h1>
+      <p class="mt-3 text-lg text-[var(--color-ink-soft)] max-w-2xl">
+        BYD is opening up to 20 Canadian dealerships in its first year. Here's where,
+        when, and what we know so far.
+      </p>
+    </div>
+
+    <!-- Status at a glance -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+      <div class="rounded-xl border border-[var(--color-border)] bg-white p-5">
+        <div class="text-3xl font-semibold text-[var(--color-ink)]">0</div>
+        <div class="text-sm text-[var(--color-muted)] mt-1">Dealerships open</div>
+      </div>
+      <div class="rounded-xl border border-[var(--color-border)] bg-white p-5">
+        <div class="text-3xl font-semibold text-[var(--color-ink)]">3</div>
+        <div class="text-sm text-[var(--color-muted)] mt-1">GTA sites in discussion</div>
+      </div>
+      <div class="rounded-xl border border-[var(--color-border)] bg-white p-5">
+        <div class="text-3xl font-semibold text-[var(--color-ink)]">20</div>
+        <div class="text-sm text-[var(--color-muted)] mt-1">Target for year one</div>
+      </div>
+    </div>
+
+    <!-- Dealer area list -->
+    <div class="rounded-xl border border-[var(--color-border)] bg-white overflow-hidden mb-10">
+      <div class="px-5 py-4 border-b border-[var(--color-border)] flex items-center justify-between">
+        <div class="font-semibold text-[var(--color-ink)]">Launch markets</div>
+        <div class="text-xs text-[var(--color-muted)]">Updated April 2026</div>
+      </div>
+      <ul class="divide-y divide-[var(--color-border)]">
+        {dealerAreas.map((area) => (
+          <li class="px-5 py-4 flex items-start justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3">
+                <div class="font-semibold text-[var(--color-ink)]">{area.city}</div>
+                <span class="text-xs text-[var(--color-muted)]">{area.province}</span>
+              </div>
+              <div class="mt-1 text-sm text-[var(--color-ink-soft)]">{area.notes}</div>
+            </div>
+            <span class:list={['shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider', statusStyles[area.status]]}>
+              {statusLabel[area.status]}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Timeline context -->
+    <div class="prose-article">
+      <h2>Why the fast build-out?</h2>
+      <p>
+        Canada's 6.1% duty on Chinese-built EVs, versus the 100% U.S. tariff,
+        makes Canada one of the most favourable developed markets for BYD's
+        North American push. That's the practical reason BYD has moved
+        aggressively on Canadian retail while sitting out the U.S.
+      </p>
+      <p>
+        BYD is currently the only Chinese passenger-vehicle manufacturer
+        registered with Transport Canada's Appendix G preclearance registry,
+        putting it ahead of Geely, Chery, and others on the regulatory timeline.
+      </p>
+
+      <h2>Expected rollout</h2>
+      <ul>
+        <li><strong>Mid-2026:</strong> demo units arrive at early Toronto locations</li>
+        <li><strong>Late 2026:</strong> first retail sales, GTA-focused</li>
+        <li><strong>2027:</strong> expansion to Vancouver, Montreal, Calgary, Ottawa, and beyond</li>
+      </ul>
+    </div>
+
+    <div class="mt-12">
+      <NewsletterSignup
+        variant="hero"
+        heading="First to know when dealerships open"
+        subheading="City-specific alerts the moment a BYD dealer opens near you. No spam."
+      />
+    </div>
+  </section>
+</BaseLayout>

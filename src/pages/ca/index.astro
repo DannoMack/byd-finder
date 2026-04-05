@@ -40,8 +40,8 @@ const models = (await getCollection('models'))
           <a href="#newsletter" class="px-5 py-3 rounded-lg bg-[var(--color-accent)] text-white font-semibold hover:bg-[var(--color-accent-dark)] transition-colors">
             Get launch alerts
           </a>
-          <a href="/ca/models" class="px-5 py-3 rounded-lg bg-white border border-[var(--color-border)] text-[var(--color-ink)] font-semibold hover:border-[var(--color-ink)] transition-colors">
-            Browse models
+          <a href="/ca/dealers" class="px-5 py-3 rounded-lg bg-white border border-[var(--color-border)] text-[var(--color-ink)] font-semibold hover:border-[var(--color-ink)] transition-colors">
+            See dealer rollout
           </a>
         </div>
       </div>
@@ -122,7 +122,7 @@ const models = (await getCollection('models'))
       <div class="flex items-end justify-between mb-6">
         <div>
           <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--color-ink)]">BYD models for Canada</h2>
-          <p class="text-[var(--color-muted)] mt-1 text-sm">Confirmed and rumored for the Canadian market.</p>
+          <p class="text-[var(--color-muted)] mt-1 text-sm">Confirmed and rumoured for the Canadian market.</p>
         </div>
         <a href="/ca/models" class="text-sm font-semibold text-[var(--color-accent)] hover:underline hidden md:inline-flex items-center gap-1">
           All models <span aria-hidden="true">&rarr;</span>
@@ -138,7 +138,7 @@ const models = (await getCollection('models'))
               {m.data.availableInCanada ? (
                 <span class="text-green-700">Available in CA</span>
               ) : (
-                <span class="text-[var(--color-accent)]">Rumored</span>
+                <span class="text-[var(--color-accent)]">Rumoured</span>
               )}
             </div>
           </a>

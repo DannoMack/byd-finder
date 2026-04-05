@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// Accessory picks. Affiliate links are disclosed; we only list items we'd
+// actually recommend. Populate hrefs once partner programs are active.
+interface Accessory {
+  title: string;
+  description: string;
+  partner: 'amazon' | 'temu' | 'other';
+  href: string;
+  category: string;
+}
+
+const accessories: Accessory[] = [
+  {
+    title: 'All-weather floor mats',
+    description: 'Heavy-duty rubber mats that trap snow, slush, and road salt — essential for Canadian winters.',
+    partner: 'amazon',
+    href: '#', // TODO: paste Amazon CA affiliate link once approved
+    category: 'Interior',
+  },
+  {
+    title: 'Trunk liner / cargo mat',
+    description: 'Protects the cargo area from wet boots, groceries, and muddy gear.',
+    partner: 'amazon',
+    href: '#',
+    category: 'Interior',
+  },
+  {
+    title: 'Level 2 home charger (32A)',
+    description: 'NEMA 14-50 compatible, Energy Star certified. Cuts overnight charge time in half versus Level 1.',
+    partner: 'amazon',
+    href: '#',
+    category: 'Charging',
+  },
+  {
+    title: 'Portable EV charger (Level 1/2)',
+    description: 'Travels with you. Adjustable amperage for 120V or 240V outlets.',
+    partner: 'amazon',
+    href: '#',
+    category: 'Charging',
+  },
+  {
+    title: 'J1772 to Tesla adapter',
+    description: 'Opens up the Tesla Supercharger network where supported in Canada.',
+    partner: 'amazon',
+    href: '#',
+    category: 'Charging',
+  },
+  {
+    title: 'Dash cam (front + rear)',
+    description: 'Front and rear recording with parking mode. Lowers insurance claim disputes.',
+    partner: 'amazon',
+    href: '#',
+    category: 'Safety',
+  },
+  {
+    title: 'Tire pressure gauge',
+    description: 'Cold weather drops PSI fast. A cheap digital gauge pays for itself in efficiency.',
+    partner: 'temu',
+    href: '#', // TODO: paste Temu affiliate link
+    category: 'Maintenance',
+  },
+  {
+    title: 'Microfibre detailing cloths (pack)',
+    description: 'For salt spray, dust, and interior wipe-downs without scratching.',
+    partner: 'temu',
+    href: '#',
+    category: 'Maintenance',
+  },
+  {
+    title: 'Winter wiper blades',
+    description: 'Rubber-boot wipers built for ice and snow. Swap out every fall.',
+    partner: 'amazon',
+    href: '#',
+    category: 'Winter',
+  },
+];
+
+const partnerStyles: Record<Accessory['partner'], { label: string; bg: string; }> = {
+  amazon: { label: 'Amazon.ca', bg: 'bg-[#ff9900] text-black' },
+  temu: { label: 'Temu', bg: 'bg-[#fb7701] text-white' },
+  other: { label: 'Shop', bg: 'bg-[var(--color-ink)] text-[var(--color-paper)]' },
+};
+
+const categories = [...new Set(accessories.map((a) => a.category))];
+---
+<BaseLayout
+  title="BYD EV Accessories for Canadian Drivers — BYD Finder"
+  description="Our picks for BYD EV accessories: chargers, floor mats, dash cams, winter gear. Hand-selected for Canadian conditions."
+>
+  <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="mb-10">
+      <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">Accessories</h1>
+      <p class="mt-3 text-lg text-[var(--color-ink-soft)] max-w-2xl">
+        Gear worth having for a BYD EV in Canadian conditions. We only list
+        things we'd actually recommend.
+      </p>
+      <p class="mt-2 text-sm text-[var(--color-muted)]">
+        Some links are affiliate partnerships. We may earn a small commission
+        when you purchase, at no extra cost to you. It never affects what we
+        recommend.
+      </p>
+    </div>
+
+    {categories.map((cat) => (
+      <div class="mb-10">
+        <h2 class="text-xl font-semibold text-[var(--color-ink)] mb-4">{cat}</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {accessories.filter((a) => a.category === cat).map((a) => (
+            <div class="rounded-xl border border-[var(--color-border)] bg-white p-5 flex flex-col">
+              <h3 class="text-lg font-semibold leading-snug text-[var(--color-ink)]">{a.title}</h3>
+              <p class="mt-2 text-sm text-[var(--color-ink-soft)] leading-relaxed flex-1">{a.description}</p>
+              <div class="mt-4">
+                {a.href === '#' ? (
+                  <span class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold bg-[var(--color-paper)] text-[var(--color-muted)] border border-[var(--color-border)]">
+                    Link coming soon
+                  </span>
+                ) : (
+                  <a
+                    href={a.href}
+                    target="_blank"
+                    rel="sponsored noopener noreferrer"
+                    class:list={['inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold hover:opacity-90', partnerStyles[a.partner].bg]}
+                  >
+                    Shop on {partnerStyles[a.partner].label} <span aria-hidden="true">&rarr;</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

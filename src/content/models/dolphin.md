@@ -20,5 +20,5 @@ The BYD Dolphin is BYD's entry-level compact hatchback — small, efficient, and
 ## What we're watching
 
 - Whether BYD includes Dolphin in the confirmed "four models" lineup
-- Canadian pricing (rumored sub-$35,000 CAD)
+- Canadian pricing (rumoured sub-$35,000 CAD)
 - Range trim options available at launch

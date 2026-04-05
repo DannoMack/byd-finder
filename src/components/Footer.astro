@@ -1,5 +1,14 @@
 ---
-const year = new Date().getFullYear();
+const now = new Date();
+const year = now.getFullYear();
+// "Last updated" shows build-time minus 12 hours, formatted as a friendly
+// Canadian date. Rebuilds happen at least daily via the scraper workflow.
+const lastUpdated = new Date(now.getTime() - 12 * 60 * 60 * 1000);
+const lastUpdatedStr = lastUpdated.toLocaleDateString('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 ---
 <footer class="border-t border-[var(--color-border)] mt-20 bg-[var(--color-ink)] text-[var(--color-paper)]">
   <div class="max-w-6xl mx-auto px-4 md:px-6 py-12">
@@ -18,9 +27,11 @@ const year = new Date().getFullYear();
         <div class="text-xs font-semibold uppercase tracking-wider text-white/60 mb-3">Explore</div>
         <ul class="space-y-2 text-sm">
           <li><a href="/ca/news" class="hover:text-[var(--color-accent)]">News</a></li>
-          <li><a href="/ca/reviews" class="hover:text-[var(--color-accent)]">Reviews</a></li>
+          <li><a href="/ca/dealers" class="hover:text-[var(--color-accent)]">Dealers</a></li>
           <li><a href="/ca/models" class="hover:text-[var(--color-accent)]">Models</a></li>
-          <li><a href="/ca/preorder" class="hover:text-[var(--color-accent)]">Pre-order info</a></li>
+          <li><a href="/ca/reviews" class="hover:text-[var(--color-accent)]">Reviews</a></li>
+          <li><a href="/ca/faq" class="hover:text-[var(--color-accent)]">FAQ</a></li>
+          <li><a href="/ca/accessories" class="hover:text-[var(--color-accent)]">Accessories</a></li>
         </ul>
       </div>
       <div>
@@ -34,7 +45,11 @@ const year = new Date().getFullYear();
     </div>
     <div class="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs text-white/50">
       <div>&copy; {year} BYD Finder. Independent enthusiast publication.</div>
-      <div>Some links may be affiliate partnerships. This never affects our editorial.</div>
+      <div class="flex items-center gap-3">
+        <span>Last updated {lastUpdatedStr}</span>
+        <span aria-hidden="true">&middot;</span>
+        <span>Affiliate links disclosed.</span>
+      </div>
     </div>
   </div>
 </footer>

@@ -7,4 +7,6 @@
 # Canada-first: root goes to /ca/
 /          /ca  302
 
-# Legacy path redirects (placeholder — add as needed)
+# Preorder page superseded by dealers page
+/ca/preorder  /ca/dealers  301
+/ca/preorder/ /ca/dealers  301

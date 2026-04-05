@@ -1,0 +1,181 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+
+interface FAQItem {
+  q: string;
+  a: string;
+}
+interface FAQSection {
+  id: string;
+  heading: string;
+  items: FAQItem[];
+}
+
+// Keep answers factual, brief, Canadian-voice. Update as real info lands.
+const sections: FAQSection[] = [
+  {
+    id: 'arrival',
+    heading: 'Arrival & launch',
+    items: [
+      {
+        q: 'When will BYD arrive in Canada?',
+        a: 'Demo units are expected at Toronto dealerships by mid-2026, with first retail sales projected for late 2026. Vancouver, Montreal, Calgary, and Ottawa follow in 2027 based on BYD\'s stated rollout plan.',
+      },
+      {
+        q: 'Which Canadian cities get BYD first?',
+        a: 'The Greater Toronto Area is launch city number one. Three GTA dealer sites are currently under discussion. Phase two covers Vancouver, Montreal, and Calgary.',
+      },
+      {
+        q: 'How many BYD dealerships will Canada get?',
+        a: 'BYD has publicly stated a goal of up to 20 Canadian dealerships within the first year of operations.',
+      },
+      {
+        q: 'Can I pre-order a BYD in Canada right now?',
+        a: 'No. Official pre-orders are not open yet. When BYD Canada opens reservations we\'ll send an email the same day if you\'re on our list.',
+      },
+      {
+        q: 'Is BYD definitely coming to Canada?',
+        a: 'Yes. BYD is the only Chinese passenger-vehicle manufacturer registered with Transport Canada\'s Appendix G preclearance registry, which is a required regulatory step. They\'ve also hired a Canadian dealer-network consultant (Dealer Solutions Mergers & Acquisitions, Markham, ON).',
+      },
+    ],
+  },
+  {
+    id: 'pricing',
+    heading: 'Pricing (speculation)',
+    items: [
+      {
+        q: 'What will a BYD cost in Canada?',
+        a: 'We\'re speculating based on comparable markets until BYD announces Canadian MSRPs. Australia and Mexico are the closest comparables. Our current estimates (subject to revision): Dolphin around $32,000 to $38,000 CAD, Atto 3 around $42,000 to $48,000 CAD, Seal around $52,000 to $62,000 CAD, Sealion 7 around $55,000 to $68,000 CAD. These are starting prices for base trims and assume BYD positions aggressively against Tesla.',
+      },
+      {
+        q: 'Why can BYD price so low?',
+        a: 'BYD builds its own batteries (LFP Blade chemistry), controls most of its supply chain, and has scale advantages from being the world\'s largest EV maker. Canada\'s 6.1% Chinese-EV tariff is meaningful but far less punishing than the U.S. 100% duty.',
+      },
+      {
+        q: 'Will the 6.1% tariff get passed to consumers?',
+        a: 'Partially. Manufacturers typically absorb some tariff pressure to stay competitive and pass some to consumers. Expect Canadian BYD prices to sit modestly above Australian prices (which carry about 5% duty) and modestly below U.S. list prices of comparable imports.',
+      },
+    ],
+  },
+  {
+    id: 'charging',
+    heading: 'Charging in Canada',
+    items: [
+      {
+        q: 'What charging connector do BYDs use?',
+        a: 'BYD models sold in North America are expected to ship with the CCS1 connector, compatible with the vast majority of Canadian public DC fast chargers (Electrify Canada, Petro-Canada, Flo, BC Hydro). A Tesla Supercharger adapter (J1772 to NACS) can expand access where Tesla has opened its network.',
+      },
+      {
+        q: 'Can I charge a BYD at home?',
+        a: 'Yes. A standard Level 2 (240V, 32A) home charger installed by a licensed electrician will fully charge most BYD models overnight. Budget roughly $500 to $1,200 for the hardware, plus $500 to $2,000 for installation depending on your panel.',
+      },
+      {
+        q: 'How much does it cost to charge an EV in Canada?',
+        a: 'Home charging in most provinces costs $0.08 to $0.15 per kWh, meaning a full charge on a 60 kWh pack runs roughly $5 to $9. DC fast chargers cost more, typically $0.30 to $0.60 per kWh, so about $18 to $36 per full charge at Electrify Canada or similar.',
+      },
+    ],
+  },
+  {
+    id: 'winter',
+    heading: 'Winter & cold weather',
+    items: [
+      {
+        q: 'How will BYD EVs handle Canadian winters?',
+        a: 'LFP (Blade Battery) chemistry loses more range in extreme cold than NMC chemistry does, but heats up more safely and lasts longer. Real-world Canadian winter range will likely show 25% to 35% reduction at -20°C on BYD models without aggressive preconditioning.',
+      },
+      {
+        q: 'Can I rustproof or spray the undercarriage?',
+        a: 'Yes, but be cautious around the battery pack, high-voltage connectors, and charging ports. Drip-style annual rust treatments (Krown, Rust Check) are EV-safe when applied by operators familiar with EVs. Avoid heavy tar-based undercoating over battery enclosures.',
+      },
+      {
+        q: 'Do I need winter tires for a BYD?',
+        a: 'Yes. Quebec mandates winter tires December 1 to March 15. Everywhere else in Canada they\'re strongly recommended (and often required by your insurance for full coverage in winter months). EVs are heavy; good winter tires matter even more than on ICE cars.',
+      },
+      {
+        q: 'Does BYD include a heat pump?',
+        a: 'Many current BYD models do include heat pumps as standard or on higher trims (Atto 3, Seal, Sealion 7). Heat pumps are meaningfully more efficient than resistive heating below about 0°C, which directly translates to retained winter range. Expect heat pumps in Canadian-market BYDs.',
+      },
+    ],
+  },
+  {
+    id: 'service',
+    heading: 'Service & repair',
+    items: [
+      {
+        q: 'Where will I service a BYD in Canada?',
+        a: 'At BYD-authorized dealerships. The 20 dealerships BYD is planning in year one will each include a service bay. Until more open, expect Toronto-area service centres only.',
+      },
+      {
+        q: 'Will parts be available?',
+        a: 'Parts availability is a legitimate concern for any new-to-market brand. BYD has large global parts operations, and Canadian dealerships will carry service parts inventory. Expect longer lead times on body panels and collision-repair parts in the first 18 months.',
+      },
+      {
+        q: 'What warranty will BYD offer in Canada?',
+        a: 'BYD typically offers 6-year/150,000 km vehicle warranty and 8-year/160,000 km battery warranty in comparable markets. Canadian terms haven\'t been announced yet.',
+      },
+    ],
+  },
+  {
+    id: 'company',
+    heading: 'About BYD',
+    items: [
+      {
+        q: 'Who is BYD?',
+        a: 'BYD (Build Your Dreams) is a Chinese automaker founded in 1995. It\'s the world\'s largest EV manufacturer by volume as of 2024 and has Warren Buffett\'s Berkshire Hathaway as a long-time shareholder. Beyond cars, BYD makes batteries, electronics, and transit buses.',
+      },
+      {
+        q: 'Is BYD safe?',
+        a: 'BYD models have achieved 5-star Euro NCAP and 5-star ANCAP (Australia) crash ratings on multiple models including Atto 3, Seal, and Sealion. Canadian IIHS or NHTSA testing will happen once vehicles are in-market.',
+      },
+      {
+        q: 'Does BYD own Blade Battery technology?',
+        a: 'Yes. The LFP Blade Battery is BYD\'s proprietary pack design. LFP chemistry is less energy-dense than NMC but significantly more thermally stable (lower fire risk) and cycles more times.',
+      },
+    ],
+  },
+];
+---
+<BaseLayout
+  title="BYD Canada FAQ — arrival, prices, charging, winter"
+  description="Everything Canadians are asking about BYD: when they're arriving, what they'll cost, how they handle winter, where to charge, and who services them."
+>
+  <section class="max-w-3xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="mb-10">
+      <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">FAQ</h1>
+      <p class="mt-3 text-lg text-[var(--color-ink-soft)]">
+        What Canadians are asking about BYD, answered with what we actually know.
+      </p>
+    </div>
+
+    <!-- Section nav -->
+    <nav class="mb-10 flex flex-wrap gap-2">
+      {sections.map((s) => (
+        <a href={`#${s.id}`} class="px-3 py-1.5 rounded-full bg-white border border-[var(--color-border)] text-sm font-medium text-[var(--color-ink-soft)] hover:border-[var(--color-ink)] hover:text-[var(--color-ink)] transition-colors">
+          {s.heading}
+        </a>
+      ))}
+    </nav>
+
+    {sections.map((section) => (
+      <section id={section.id} class="mb-12 scroll-mt-20">
+        <h2 class="text-xl font-semibold text-[var(--color-ink)] mb-4">{section.heading}</h2>
+        <div class="space-y-3">
+          {section.items.map((item) => (
+            <details class="group rounded-xl border border-[var(--color-border)] bg-white p-5 [&[open]]:border-[var(--color-ink)]">
+              <summary class="cursor-pointer font-semibold text-[var(--color-ink)] list-none flex items-start justify-between gap-4">
+                <span>{item.q}</span>
+                <span class="text-[var(--color-muted)] text-xl leading-none group-open:rotate-45 transition-transform">+</span>
+              </summary>
+              <p class="mt-3 text-[var(--color-ink-soft)] leading-relaxed">{item.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div class="mt-12">
+      <NewsletterSignup variant="inline" heading="Got a question we missed?" subheading="Email hello@bydfinder.com — and subscribe while you're here." />
+    </div>
+  </section>
+</BaseLayout>
