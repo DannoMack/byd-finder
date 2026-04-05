@@ -4,6 +4,8 @@
 
 interface Env {
   SUBSCRIBERS?: KVNamespace;
+  BEEHIIV_API_KEY?: string;
+  BEEHIIV_PUBLICATION_ID?: string;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -40,12 +42,42 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       ua: (request.headers.get('user-agent') || '').slice(0, 256),
     };
 
+    // 1. Safety-net: store to Cloudflare KV (survives beehiiv outages/migration)
     if (env.SUBSCRIBERS) {
-      // idempotent upsert keyed by email
       await env.SUBSCRIBERS.put(`sub:${email}`, JSON.stringify(record));
     } else {
-      // no KV bound yet — log for visibility in Pages Function logs
       console.log('subscribe (no KV):', JSON.stringify(record));
+    }
+
+    // 2. Forward to beehiiv for real newsletter delivery
+    if (env.BEEHIIV_API_KEY && env.BEEHIIV_PUBLICATION_ID) {
+      try {
+        const beehiivRes = await fetch(
+          `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUBLICATION_ID}/subscriptions`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${env.BEEHIIV_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email,
+              reactivate_existing: true,
+              send_welcome_email: true,
+              utm_source: 'bydfinder.com',
+              utm_medium: 'web',
+              utm_campaign: source,
+            }),
+          },
+        );
+        if (!beehiivRes.ok) {
+          const text = await beehiivRes.text();
+          console.error('beehiiv subscribe failed:', beehiivRes.status, text);
+          // Non-fatal: KV still has the record. We'll retry manually if needed.
+        }
+      } catch (err) {
+        console.error('beehiiv subscribe error:', err);
+      }
     }
 
     return new Response(JSON.stringify({ ok: true }), {
