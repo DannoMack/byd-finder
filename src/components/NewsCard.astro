@@ -1,0 +1,35 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  summary: string;
+  source: string;
+  publishedAt: Date;
+  image?: string;
+  external?: boolean;
+}
+const { href, title, summary, source, publishedAt, image, external = false } = Astro.props;
+const dateStr = publishedAt.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<a
+  href={href}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+  class="group block rounded-xl border border-[var(--color-border)] bg-white hover:border-[var(--color-ink)] transition-colors overflow-hidden"
+>
+  {image && (
+    <div class="aspect-[16/9] overflow-hidden bg-[var(--color-paper)]">
+      <img src={image} alt="" loading="lazy" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" />
+    </div>
+  )}
+  <div class="p-5">
+    <div class="flex items-center gap-2 text-xs text-[var(--color-muted)] mb-2">
+      <span class="font-medium text-[var(--color-accent)] uppercase tracking-wider">{source}</span>
+      <span>&middot;</span>
+      <time datetime={publishedAt.toISOString()}>{dateStr}</time>
+      {external && <span class="ml-auto">&#8599;</span>}
+    </div>
+    <h3 class="text-lg font-semibold leading-snug text-[var(--color-ink)] group-hover:text-[var(--color-accent)] transition-colors">{title}</h3>
+    <p class="mt-2 text-sm text-[var(--color-ink-soft)] leading-relaxed line-clamp-3">{summary}</p>
+  </div>
+</a>

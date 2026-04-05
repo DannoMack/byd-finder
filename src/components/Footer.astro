@@ -1,0 +1,40 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="border-t border-[var(--color-border)] mt-20 bg-[var(--color-ink)] text-[var(--color-paper)]">
+  <div class="max-w-6xl mx-auto px-4 md:px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="inline-block w-2 h-2 rounded-full bg-[var(--color-accent)]"></span>
+          <span class="font-semibold tracking-tight">BYD Finder</span>
+        </div>
+        <p class="text-sm text-white/70 max-w-md leading-relaxed">
+          Independent coverage of BYD's Canadian launch &mdash; news, reviews, model info,
+          and release timelines. Not affiliated with BYD.
+        </p>
+      </div>
+      <div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-white/60 mb-3">Explore</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/ca/news" class="hover:text-[var(--color-accent)]">News</a></li>
+          <li><a href="/ca/reviews" class="hover:text-[var(--color-accent)]">Reviews</a></li>
+          <li><a href="/ca/models" class="hover:text-[var(--color-accent)]">Models</a></li>
+          <li><a href="/ca/preorder" class="hover:text-[var(--color-accent)]">Pre-order info</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-xs font-semibold uppercase tracking-wider text-white/60 mb-3">About</div>
+        <ul class="space-y-2 text-sm">
+          <li><a href="/ca/about" class="hover:text-[var(--color-accent)]">About</a></li>
+          <li><a href="/ca/contact" class="hover:text-[var(--color-accent)]">Contact</a></li>
+          <li><a href="/ca/privacy" class="hover:text-[var(--color-accent)]">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 text-xs text-white/50">
+      <div>&copy; {year} BYD Finder. Independent enthusiast publication.</div>
+      <div>Some links may be affiliate partnerships. This never affects our editorial.</div>
+    </div>
+  </div>
+</footer>

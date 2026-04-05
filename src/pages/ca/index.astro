@@ -1,0 +1,149 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import AdSlot from '../../components/AdSlot.astro';
+
+const allNews = (await getCollection('news'))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+const topNews = allNews.slice(0, 6);
+
+const reviews = (await getCollection('reviews'))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime())
+  .slice(0, 3);
+
+const models = (await getCollection('models'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 4);
+---
+<BaseLayout
+  title="BYD Finder — BYD Canada news, reviews, launch tracker"
+  description="When is BYD coming to Canada? Track launch dates, pre-order windows, prices, and reviews for every BYD EV headed to the Canadian market."
+>
+  <!-- Hero -->
+  <section class="border-b border-[var(--color-border)] bg-[var(--color-paper)]">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 py-16 md:py-24">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-accent)]/10 text-[var(--color-accent)] text-xs font-semibold uppercase tracking-wider mb-5">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] animate-pulse"></span>
+          Tracking BYD's Canadian launch
+        </div>
+        <h1 class="text-4xl md:text-6xl font-semibold tracking-tight leading-[1.05] text-[var(--color-ink)]">
+          When BYD arrives in Canada, you'll know first.
+        </h1>
+        <p class="mt-5 text-lg md:text-xl text-[var(--color-ink-soft)] leading-relaxed max-w-2xl">
+          Independent coverage of BYD's Canadian market entry &mdash; launch dates, pre-order
+          windows, pricing reveals, and honest reviews of every model headed to our roads.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#newsletter" class="px-5 py-3 rounded-lg bg-[var(--color-accent)] text-white font-semibold hover:bg-[var(--color-accent-dark)] transition-colors">
+            Get launch alerts
+          </a>
+          <a href="/ca/models" class="px-5 py-3 rounded-lg bg-white border border-[var(--color-border)] text-[var(--color-ink)] font-semibold hover:border-[var(--color-ink)] transition-colors">
+            Browse models
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest news -->
+  <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="flex items-end justify-between mb-6">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--color-ink)]">Latest news</h2>
+        <p class="text-[var(--color-muted)] mt-1 text-sm">Aggregated daily from trusted auto outlets.</p>
+      </div>
+      <a href="/ca/news" class="text-sm font-semibold text-[var(--color-accent)] hover:underline hidden md:inline-flex items-center gap-1">
+        All news <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+
+    {topNews.length === 0 ? (
+      <div class="rounded-xl border border-dashed border-[var(--color-border)] bg-white p-10 text-center">
+        <p class="text-[var(--color-muted)]">News aggregator spinning up &mdash; first stories land within 24 hours.</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {topNews.map((item) => (
+          <NewsCard
+            href={item.data.sourceUrl}
+            title={item.data.title}
+            summary={item.data.summary}
+            source={item.data.source}
+            publishedAt={item.data.publishedAt}
+            image={item.data.image}
+            external={true}
+          />
+        ))}
+      </div>
+    )}
+  </section>
+
+  <AdSlot format="horizontal" slot="home-mid" />
+
+  <!-- Newsletter -->
+  <section id="newsletter" class="max-w-6xl mx-auto px-4 md:px-6 py-12">
+    <NewsletterSignup variant="hero" />
+  </section>
+
+  <!-- Featured reviews -->
+  {reviews.length > 0 && (
+    <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+      <div class="flex items-end justify-between mb-6">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--color-ink)]">Featured reviews</h2>
+          <p class="text-[var(--color-muted)] mt-1 text-sm">Hand-picked video reviews from trusted channels.</p>
+        </div>
+        <a href="/ca/reviews" class="text-sm font-semibold text-[var(--color-accent)] hover:underline hidden md:inline-flex items-center gap-1">
+          All reviews <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {reviews.map((r) => (
+          <a href={`/ca/reviews/${r.id}`} class="group block rounded-xl border border-[var(--color-border)] bg-white hover:border-[var(--color-ink)] transition-colors overflow-hidden">
+            <div class="aspect-video bg-black">
+              <img src={`https://i.ytimg.com/vi/${r.data.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-4">
+              <div class="text-xs text-[var(--color-muted)] uppercase tracking-wider font-medium">{r.data.channel} &middot; {r.data.model}</div>
+              <div class="mt-1 font-semibold leading-snug text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">{r.data.title}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Models -->
+  {models.length > 0 && (
+    <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16 border-t border-[var(--color-border)]">
+      <div class="flex items-end justify-between mb-6">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-semibold tracking-tight text-[var(--color-ink)]">BYD models for Canada</h2>
+          <p class="text-[var(--color-muted)] mt-1 text-sm">Confirmed and rumored for the Canadian market.</p>
+        </div>
+        <a href="/ca/models" class="text-sm font-semibold text-[var(--color-accent)] hover:underline hidden md:inline-flex items-center gap-1">
+          All models <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {models.map((m) => (
+          <a href={`/ca/models/${m.data.slug}`} class="group rounded-xl border border-[var(--color-border)] bg-white p-5 hover:border-[var(--color-ink)] transition-colors">
+            <div class="text-xs uppercase tracking-wider text-[var(--color-muted)] font-medium">{m.data.bodyStyle}</div>
+            <div class="mt-1 text-lg font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">{m.data.name}</div>
+            {m.data.rangeKm && <div class="mt-2 text-sm text-[var(--color-ink-soft)]">{m.data.rangeKm} km range</div>}
+            <div class="mt-3 text-xs font-semibold uppercase tracking-wider">
+              {m.data.availableInCanada ? (
+                <span class="text-green-700">Available in CA</span>
+              ) : (
+                <span class="text-[var(--color-accent)]">Rumored</span>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>

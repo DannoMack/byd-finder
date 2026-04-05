@@ -1,0 +1,22 @@
+---
+interface Props {
+  href: string;
+  partner?: 'amazon' | 'ratehub' | 'other';
+  label: string;
+}
+const { href, partner = 'other', label } = Astro.props;
+const partnerColors: Record<string, string> = {
+  amazon: 'bg-[#ff9900] text-black',
+  ratehub: 'bg-[#0055a5] text-white',
+  other: 'bg-[var(--color-ink)] text-[var(--color-paper)]',
+};
+---
+<a
+  href={href}
+  target="_blank"
+  rel="sponsored noopener noreferrer"
+  class:list={['inline-flex items-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity', partnerColors[partner]]}
+>
+  {label}
+  <span aria-hidden="true">&rarr;</span>
+</a>

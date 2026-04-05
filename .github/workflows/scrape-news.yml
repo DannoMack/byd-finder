@@ -1,0 +1,39 @@
+name: Scrape BYD news
+
+on:
+  schedule:
+    # Nightly at 06:00 UTC (01:00 ET, 22:00 PT previous day)
+    - cron: '0 6 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Run scraper
+        run: npx tsx scripts/scrape-news.ts
+
+      - name: Commit new articles
+        run: |
+          git config user.name "byd-finder-bot"
+          git config user.email "bot@bydfinder.com"
+          git add src/content/news
+          if git diff --cached --quiet; then
+            echo "No new articles."
+            exit 0
+          fi
+          COUNT=$(git diff --cached --name-only | wc -l)
+          git commit -m "scraper: add $COUNT new article(s)"
+          git push

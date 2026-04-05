@@ -1,0 +1,64 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const models = (await getCollection('models'))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout
+  title="BYD Models for Canada — BYD Finder"
+  description="Every BYD EV model confirmed or rumored for the Canadian market, with specs, pricing, and availability."
+>
+  <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="mb-10">
+      <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">Models</h1>
+      <p class="mt-2 text-[var(--color-muted)]">BYD's lineup for the Canadian market &mdash; confirmed, rumored, and likely.</p>
+    </div>
+
+    {models.length === 0 ? (
+      <div class="rounded-xl border border-dashed border-[var(--color-border)] bg-white p-10 text-center">
+        <p class="text-[var(--color-muted)]">Model pages coming soon.</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {models.map((m) => (
+          <a href={`/ca/models/${m.data.slug}`} class="group rounded-xl border border-[var(--color-border)] bg-white p-6 hover:border-[var(--color-ink)] transition-colors">
+            <div class="flex items-start justify-between">
+              <div>
+                <div class="text-xs uppercase tracking-wider text-[var(--color-muted)] font-medium">{m.data.bodyStyle}</div>
+                <div class="mt-1 text-2xl font-semibold text-[var(--color-ink)] group-hover:text-[var(--color-accent)]">{m.data.name}</div>
+              </div>
+              <div class="text-xs font-semibold uppercase tracking-wider">
+                {m.data.availableInCanada ? (
+                  <span class="text-green-700">Available</span>
+                ) : (
+                  <span class="text-[var(--color-accent)]">Rumored</span>
+                )}
+              </div>
+            </div>
+            <div class="mt-4 grid grid-cols-3 gap-4 text-sm">
+              {m.data.rangeKm && (
+                <div>
+                  <div class="text-xs text-[var(--color-muted)]">Range</div>
+                  <div class="font-semibold">{m.data.rangeKm} km</div>
+                </div>
+              )}
+              {m.data.batteryKWh && (
+                <div>
+                  <div class="text-xs text-[var(--color-muted)]">Battery</div>
+                  <div class="font-semibold">{m.data.batteryKWh} kWh</div>
+                </div>
+              )}
+              {m.data.priceFromCAD && (
+                <div>
+                  <div class="text-xs text-[var(--color-muted)]">From</div>
+                  <div class="font-semibold">${m.data.priceFromCAD.toLocaleString()} CAD</div>
+                </div>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

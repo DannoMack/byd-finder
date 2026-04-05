@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NewsCard from '../../../components/NewsCard.astro';
+import NewsletterSignup from '../../../components/NewsletterSignup.astro';
+
+const allNews = (await getCollection('news'))
+  .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+---
+<BaseLayout
+  title="BYD Canada News — BYD Finder"
+  description="Latest news on BYD's Canadian market entry. Launch dates, model announcements, pricing, and regulatory updates."
+>
+  <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="mb-10">
+      <h1 class="text-3xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">News</h1>
+      <p class="mt-2 text-[var(--color-muted)]">Aggregated BYD Canada coverage from trusted auto outlets, updated daily.</p>
+    </div>
+
+    {allNews.length === 0 ? (
+      <div class="rounded-xl border border-dashed border-[var(--color-border)] bg-white p-10 text-center">
+        <p class="text-[var(--color-muted)]">No news yet &mdash; scraper runs nightly. Check back tomorrow.</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {allNews.map((item) => (
+          <NewsCard
+            href={item.data.sourceUrl}
+            title={item.data.title}
+            summary={item.data.summary}
+            source={item.data.source}
+            publishedAt={item.data.publishedAt}
+            image={item.data.image}
+            external={true}
+          />
+        ))}
+      </div>
+    )}
+
+    <div class="mt-16">
+      <NewsletterSignup variant="inline" />
+    </div>
+  </section>
+</BaseLayout>

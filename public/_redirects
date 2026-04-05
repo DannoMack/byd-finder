@@ -1,0 +1,10 @@
+# Cloudflare Pages redirects
+# Canonical domain: bydfinder.com
+# bydfinder.ca and bydfinder.org are custom domains that 301 to canonical.
+# These rules are enforced by per-domain Pages custom-domain routing; this file
+# handles path-level redirects on whichever domain is serving.
+
+# Canada-first: root goes to /ca/
+/          /ca  302
+
+# Legacy path redirects (placeholder — add as needed)

@@ -1,0 +1,33 @@
+---
+const { pathname } = Astro.url;
+const isActive = (p: string) => pathname === p || pathname.startsWith(p + '/');
+
+const links = [
+  { href: '/ca/news', label: 'News' },
+  { href: '/ca/reviews', label: 'Reviews' },
+  { href: '/ca/models', label: 'Models' },
+  { href: '/ca/preorder', label: 'Pre-order' },
+];
+---
+<header class="border-b border-[var(--color-border)] bg-[var(--color-paper)]/95 backdrop-blur sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 md:px-6 h-14 flex items-center justify-between">
+    <a href="/ca" class="flex items-center gap-2 group">
+      <span class="inline-block w-2 h-2 rounded-full bg-[var(--color-accent)]"></span>
+      <span class="font-semibold tracking-tight text-[var(--color-ink)]">BYD Finder</span>
+      <span class="text-xs text-[var(--color-muted)] hidden sm:inline">Canada</span>
+    </a>
+    <nav class="flex items-center gap-1 md:gap-2">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class:list={[
+            'px-2 md:px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            isActive(l.href)
+              ? 'bg-[var(--color-ink)] text-[var(--color-paper)]'
+              : 'text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:bg-black/5',
+          ]}
+        >{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
