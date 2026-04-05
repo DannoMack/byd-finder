@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import NewsletterSignup from '../../components/NewsletterSignup.astro';
+import DealerMap from '../../components/DealerMap.astro';
 
 // Dealership tracker — cities being scouted + confirmed locations
 // Update this as BYD Canada announces dealers.
@@ -58,6 +59,11 @@ const statusLabel: Record<DealerArea['status'], string> = {
         <div class="text-3xl font-semibold text-[var(--color-ink)]">20</div>
         <div class="text-sm text-[var(--color-muted)] mt-1">Target for year one</div>
       </div>
+    </div>
+
+    <!-- Map -->
+    <div class="mb-10">
+      <DealerMap />
     </div>
 
     <!-- Dealer area list -->

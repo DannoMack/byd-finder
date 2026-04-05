@@ -1,0 +1,114 @@
+---
+// Leaflet map of planned/scouting BYD Canada dealer locations.
+// Uses CDN Leaflet + free OSM tiles (zero cost, zero API keys).
+// Postal-code search is stubbed until real dealer addresses ship.
+
+interface DealerPin {
+  city: string;
+  province: string;
+  status: 'scouting' | 'planned' | 'confirmed';
+  lat: number;
+  lng: number;
+  notes: string;
+}
+
+// Approximate city centres. Replace with real addresses as BYD announces them.
+const pins: DealerPin[] = [
+  { city: 'Toronto (GTA)', province: 'ON', status: 'scouting', lat: 43.6532, lng: -79.3832, notes: '3 sites under discussion' },
+  { city: 'Markham', province: 'ON', status: 'scouting', lat: 43.8561, lng: -79.3370, notes: 'Home base of BYD\'s retail consultant' },
+  { city: 'Mississauga', province: 'ON', status: 'scouting', lat: 43.5890, lng: -79.6441, notes: 'Part of GTA launch cluster' },
+  { city: 'Vancouver', province: 'BC', status: 'planned', lat: 49.2827, lng: -123.1207, notes: 'Phase-two expansion' },
+  { city: 'Montreal', province: 'QC', status: 'planned', lat: 45.5019, lng: -73.5674, notes: 'Phase-two expansion (FR retail)' },
+  { city: 'Calgary', province: 'AB', status: 'planned', lat: 51.0447, lng: -114.0719, notes: 'Phase-two expansion' },
+  { city: 'Ottawa', province: 'ON', status: 'planned', lat: 45.4215, lng: -75.6972, notes: 'Phase-two expansion' },
+];
+---
+<div class="rounded-xl border border-[var(--color-border)] bg-white overflow-hidden">
+  <div class="px-5 py-4 border-b border-[var(--color-border)] flex items-center justify-between gap-3 flex-wrap">
+    <div>
+      <div class="font-semibold text-[var(--color-ink)]">Dealer locator</div>
+      <div class="text-xs text-[var(--color-muted)]">{pins.length} locations tracked &middot; updated as BYD announces</div>
+    </div>
+    <div class="flex items-center gap-2 text-xs">
+      <span class="inline-flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-accent)]"></span> Scouting
+      </span>
+      <span class="inline-flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-[var(--color-ink)]"></span> Planned
+      </span>
+      <span class="inline-flex items-center gap-1.5">
+        <span class="w-2.5 h-2.5 rounded-full bg-green-600"></span> Open
+      </span>
+    </div>
+  </div>
+
+  <div class="px-5 py-3 bg-[var(--color-paper)] border-b border-[var(--color-border)]">
+    <form id="dealer-search" class="flex items-center gap-2">
+      <input
+        type="text"
+        id="postal-input"
+        placeholder="M5V 3A8"
+        maxlength="7"
+        disabled
+        class="flex-1 px-3 py-2 rounded-lg border border-[var(--color-border)] bg-white text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+      />
+      <button
+        type="submit"
+        disabled
+        class="px-4 py-2 rounded-lg bg-[var(--color-ink)] text-[var(--color-paper)] text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed"
+      >Find nearest</button>
+    </form>
+    <p class="mt-1.5 text-xs text-[var(--color-muted)]">
+      Postal-code search activates once BYD publishes real dealer addresses.
+    </p>
+  </div>
+
+  <div id="dealer-map" class="w-full h-[400px] md:h-[500px] bg-[var(--color-paper)]"></div>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<script is:inline src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
+<script is:inline define:vars={{ pins }}>
+  (function () {
+    if (typeof L === 'undefined') return;
+    const map = L.map('dealer-map', {
+      scrollWheelZoom: false,
+    }).setView([52.9399, -92.8], 4); // Canada-centred
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    const statusColor = {
+      scouting: '#d4202c',
+      planned: '#0a0f1f',
+      confirmed: '#16a34a',
+    };
+    const statusLabel = {
+      scouting: 'Scouting',
+      planned: 'Planned',
+      confirmed: 'Open',
+    };
+
+    pins.forEach(function (p) {
+      const marker = L.circleMarker([p.lat, p.lng], {
+        radius: 9,
+        fillColor: statusColor[p.status] || '#d4202c',
+        color: '#fff',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.95,
+      }).addTo(map);
+
+      marker.bindPopup(
+        '<div style="font-family:Inter,system-ui,sans-serif;min-width:180px">' +
+          '<div style="font-weight:600;color:#0a0f1f">' + p.city + '</div>' +
+          '<div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;margin-top:2px">' + statusLabel[p.status] + ' &middot; ' + p.province + '</div>' +
+          '<div style="font-size:13px;color:#1a2036;margin-top:6px">' + p.notes + '</div>' +
+        '</div>'
+      );
+    });
+  })();
+</script>
