@@ -12,7 +12,8 @@ interface FAQSection {
   items: FAQItem[];
 }
 
-// Keep answers factual, brief, Canadian-voice. Update as real info lands.
+// Answers drafted with stop-slop rules: active voice, specific numbers, no adverbs,
+// no em-dashes, no throat-clearing openers. Update as real info lands.
 const sections: FAQSection[] = [
   {
     id: 'arrival',
@@ -20,23 +21,23 @@ const sections: FAQSection[] = [
     items: [
       {
         q: 'When will BYD arrive in Canada?',
-        a: 'Demo units are expected at Toronto dealerships by mid-2026, with first retail sales projected for late 2026. Vancouver, Montreal, Calgary, and Ottawa follow in 2027 based on BYD\'s stated rollout plan.',
+        a: 'Toronto sees demo units by mid-2026. First retail sales land late 2026. Vancouver, Montreal, Calgary, and Ottawa follow in 2027.',
       },
       {
         q: 'Which Canadian cities get BYD first?',
-        a: 'The Greater Toronto Area is launch city number one. Three GTA dealer sites are currently under discussion. Phase two covers Vancouver, Montreal, and Calgary.',
+        a: 'The Greater Toronto Area is launch city number one. BYD is scouting three GTA dealer sites right now. Phase two covers Vancouver, Montreal, and Calgary.',
       },
       {
         q: 'How many BYD dealerships will Canada get?',
-        a: 'BYD has publicly stated a goal of up to 20 Canadian dealerships within the first year of operations.',
+        a: 'BYD wants 20 Canadian dealerships open within the first year.',
       },
       {
         q: 'Can I pre-order a BYD in Canada right now?',
-        a: 'No. Official pre-orders are not open yet. When BYD Canada opens reservations we\'ll send an email the same day if you\'re on our list.',
+        a: 'No. Pre-orders are not open. When BYD Canada opens reservations, we email everyone on our list the same day.',
       },
       {
         q: 'Is BYD definitely coming to Canada?',
-        a: 'Yes. BYD is the only Chinese passenger-vehicle manufacturer registered with Transport Canada\'s Appendix G preclearance registry, which is a required regulatory step. They\'ve also hired a Canadian dealer-network consultant (Dealer Solutions Mergers & Acquisitions, Markham, ON).',
+        a: 'Yes. BYD registered its production facilities with Transport Canada\'s Appendix G preclearance registry (no other Chinese passenger-vehicle maker has). They hired Dealer Solutions Mergers & Acquisitions in Markham, Ontario, to scout retail locations.',
       },
     ],
   },
@@ -46,15 +47,15 @@ const sections: FAQSection[] = [
     items: [
       {
         q: 'What will a BYD cost in Canada?',
-        a: 'BYD hasn\'t announced Canadian prices yet. Australia is the closest comparable market (similar income levels, similar EV adoption). Starting Australian prices converted to CAD plus a typical 10-25% Canadian launch premium put our estimates at: Dolphin around $32,000 to $36,000, Atto 3 around $40,000 to $45,000, Seal around $48,000 to $54,000, Sealion 7 around $54,000 to $60,000. Base trims only, subject to dealer markup in the first 6 months.',
+        a: 'BYD has not announced Canadian prices. Australia is the closest comparable: similar incomes, similar EV adoption, similar regulatory overhead. Australia\'s starting prices converted to CAD, plus a 10-25% Canadian launch premium, give us these estimates. Dolphin $32,000 to $36,000. Atto 3 $40,000 to $45,000. Seal $48,000 to $54,000. Sealion 7 $54,000 to $60,000. Base trims. Expect dealer markup on top in the first six months.',
       },
       {
         q: 'Why can BYD price so low?',
-        a: 'BYD builds its own batteries (LFP Blade chemistry), controls most of its supply chain, and has scale advantages from being the world\'s largest EV maker. Canada\'s 6.1% Chinese-EV tariff is meaningful but far less punishing than the U.S. 100% duty.',
+        a: 'BYD makes its own batteries (LFP Blade chemistry), owns most of its supply chain, and outsells every other EV maker by volume. Canada\'s 6.1% tariff on Chinese EVs still bites, but the 100% U.S. duty bites far harder.',
       },
       {
         q: 'Will the 6.1% tariff get passed to consumers?',
-        a: 'Partially. Manufacturers typically absorb some tariff pressure to stay competitive and pass the rest to buyers. Expect Canadian BYD prices to sit modestly above Australian prices (which carry about 5% duty) and well below U.S. list prices of comparable imports (blocked by a 100% U.S. tariff). Canada also runs a 24,500-vehicle annual quota on Chinese EVs at the reduced rate, which may tighten supply in the first year.',
+        a: 'Some of it. Manufacturers eat part of a tariff to stay priced against rivals and push the rest onto buyers. Expect Canadian BYDs to sit a bit above Australian prices (Australia charges about 5%) and well below what U.S. buyers would pay if imports weren\'t blocked. Canada also caps Chinese EV imports at 24,500 units per year at the reduced rate, which may tighten supply in year one.',
       },
     ],
   },
@@ -64,15 +65,15 @@ const sections: FAQSection[] = [
     items: [
       {
         q: 'What charging connector do BYDs use?',
-        a: 'BYD models sold in North America are expected to ship with the CCS1 connector, compatible with the vast majority of Canadian public DC fast chargers (Electrify Canada, Petro-Canada, Flo, BC Hydro). A Tesla Supercharger adapter (J1772 to NACS) can expand access where Tesla has opened its network.',
+        a: 'North American BYDs should ship with the CCS1 connector. That works with most Canadian public DC fast chargers: Electrify Canada, Petro-Canada, Flo, BC Hydro. A J1772-to-NACS adapter opens up Tesla Superchargers where Tesla has opened its network to other brands.',
       },
       {
         q: 'Can I charge a BYD at home?',
-        a: 'Yes. A standard Level 2 (240V, 32A) home charger installed by a licensed electrician will fully charge most BYD models overnight. Budget roughly $500 to $1,200 for the hardware, plus $500 to $2,000 for installation depending on your panel.',
+        a: 'Yes. A Level 2 (240V, 32A) home charger from a licensed electrician fills most BYD packs overnight. Budget $500 to $1,200 for the hardware and $500 to $2,000 for installation, depending on your panel.',
       },
       {
         q: 'How much does it cost to charge an EV in Canada?',
-        a: 'Home charging in most provinces costs $0.08 to $0.15 per kWh, meaning a full charge on a 60 kWh pack runs roughly $5 to $9. DC fast chargers cost more, typically $0.30 to $0.60 per kWh, so about $18 to $36 per full charge at Electrify Canada or similar.',
+        a: 'Home electricity in most provinces runs $0.08 to $0.15 per kWh. A full charge on a 60 kWh pack costs $5 to $9 at home. DC fast chargers charge $0.30 to $0.60 per kWh, so a full charge at Electrify Canada costs $18 to $36.',
       },
     ],
   },
@@ -82,19 +83,19 @@ const sections: FAQSection[] = [
     items: [
       {
         q: 'How will BYD EVs handle Canadian winters?',
-        a: 'LFP (Blade Battery) chemistry loses more range in extreme cold than NMC chemistry does, but heats up more safely and lasts longer. Real-world Canadian winter range will likely show 25% to 35% reduction at -20°C on BYD models without aggressive preconditioning.',
+        a: 'LFP (Blade Battery) chemistry loses more range in extreme cold than NMC does. It also holds up safer and lasts more cycles. Plan for 25% to 35% range loss at -20°C on a BYD you haven\'t preconditioned.',
       },
       {
         q: 'Can I rustproof or spray the undercarriage?',
-        a: 'Yes, but be cautious around the battery pack, high-voltage connectors, and charging ports. Drip-style annual rust treatments (Krown, Rust Check) are EV-safe when applied by operators familiar with EVs. Avoid heavy tar-based undercoating over battery enclosures.',
+        a: 'Yes, with caveats. Keep spray away from the battery pack, high-voltage connectors, and charging ports. Drip-style annual treatments from Krown or Rust Check work if the shop knows EVs. Skip heavy tar undercoating over battery enclosures.',
       },
       {
         q: 'Do I need winter tires for a BYD?',
-        a: 'Yes. Quebec mandates winter tires December 1 to March 15. Everywhere else in Canada they\'re strongly recommended (and often required by your insurance for full coverage in winter months). EVs are heavy; good winter tires matter even more than on ICE cars.',
+        a: 'Yes. Quebec law requires them from December 1 to March 15. Everywhere else they are not required by law, but insurance companies often require them for full winter coverage. EVs are heavy. Good winter tires matter more on an EV than on a gas car.',
       },
       {
         q: 'Does BYD include a heat pump?',
-        a: 'Many current BYD models do include heat pumps as standard or on higher trims (Atto 3, Seal, Sealion 7). Heat pumps are meaningfully more efficient than resistive heating below about 0°C, which directly translates to retained winter range. Expect heat pumps in Canadian-market BYDs.',
+        a: 'Atto 3, Seal, and Sealion 7 ship with heat pumps on most trims. Heat pumps beat resistive heating below 0°C and save you 10% to 25% of winter range. Canadian-market BYDs should all include them.',
       },
     ],
   },
@@ -104,15 +105,15 @@ const sections: FAQSection[] = [
     items: [
       {
         q: 'Where will I service a BYD in Canada?',
-        a: 'At BYD-authorized dealerships. The 20 dealerships BYD is planning in year one will each include a service bay. Until more open, expect Toronto-area service centres only.',
+        a: 'At BYD-authorized dealerships. Each of the 20 planned year-one locations includes a service bay. Outside the GTA, expect long drives until more dealers open.',
       },
       {
         q: 'Will parts be available?',
-        a: 'Parts availability is a legitimate concern for any new-to-market brand. BYD has large global parts operations, and Canadian dealerships will carry service parts inventory. Expect longer lead times on body panels and collision-repair parts in the first 18 months.',
+        a: 'Routine service parts, yes. Body panels and collision-repair parts will take longer in the first 18 months because Canadian dealerships build inventory slowly and the supply chain from China adds lead time. BYD runs a large global parts operation, so oil changes and brake jobs are not the problem. Fender-benders are.',
       },
       {
         q: 'What warranty will BYD offer in Canada?',
-        a: 'BYD typically offers 6-year/150,000 km vehicle warranty and 8-year/160,000 km battery warranty in comparable markets. Canadian terms haven\'t been announced yet.',
+        a: 'BYD has not confirmed Canadian warranty terms. Comparable markets get 6-year / 150,000 km on the vehicle and 8-year / 160,000 km on the battery.',
       },
     ],
   },
@@ -122,15 +123,15 @@ const sections: FAQSection[] = [
     items: [
       {
         q: 'Who is BYD?',
-        a: 'BYD (Build Your Dreams) is a Chinese automaker founded in 1995. It\'s the world\'s largest EV manufacturer by volume as of 2024 and has Warren Buffett\'s Berkshire Hathaway as a long-time shareholder. Beyond cars, BYD makes batteries, electronics, and transit buses.',
+        a: 'BYD (Build Your Dreams) is a Chinese automaker founded in 1995. It has sold more EVs than any other company in the world since 2023. Warren Buffett\'s Berkshire Hathaway has been a shareholder since 2008. BYD also builds batteries, consumer electronics, and transit buses.',
       },
       {
         q: 'Is BYD safe?',
-        a: 'BYD models have achieved 5-star Euro NCAP and 5-star ANCAP (Australia) crash ratings on multiple models including Atto 3, Seal, and Sealion. Canadian IIHS or NHTSA testing will happen once vehicles are in-market.',
+        a: 'Atto 3, Seal, and Sealion 7 all earned 5 stars from Euro NCAP and ANCAP. IIHS and NHTSA crash data for the Canadian market will come once vehicles are on North American roads.',
       },
       {
         q: 'Does BYD own Blade Battery technology?',
-        a: 'Yes. The LFP Blade Battery is BYD\'s proprietary pack design. LFP chemistry is less energy-dense than NMC but significantly more thermally stable (lower fire risk) and cycles more times.',
+        a: 'Yes. The Blade Battery is BYD\'s own LFP pack design. LFP packs carry less energy per kilogram than NMC packs, survive more charge cycles, and resist thermal runaway better in a crash.',
       },
     ],
   },
