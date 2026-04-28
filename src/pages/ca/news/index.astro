@@ -32,6 +32,7 @@ const allNews = (await getCollection('news'))
             publishedAt={item.data.publishedAt}
             image={item.data.image}
             external={!item.data.editorial}
+            relatedLinks={item.data.internalLinks}
           />
         ))}
       </div>
