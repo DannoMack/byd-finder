@@ -51,6 +51,16 @@ const SOURCES: Source[] = [
     url: 'https://driveteslacanada.ca/feed/',
     filter: /\bbyd\b/i,
   },
+  {
+    name: 'CarScoops',
+    url: 'https://www.carscoops.com/feed/',
+    filter: /\bbyd\b/i,
+  },
+  {
+    name: 'CnEVPost',
+    url: 'https://www.cnevpost.com/feed/',
+    filter: /\bbyd\b/i,
+  },
 ];
 
 // Canada-relevance boost: items matching this get country: "ca"

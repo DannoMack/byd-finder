@@ -20,7 +20,7 @@ const links = [
       <span class="font-semibold tracking-tight text-[var(--color-ink)]">BYD Finder</span>
       <span class="text-xs text-[var(--color-muted)] hidden sm:inline">Canada</span>
     </a>
-    <nav class="flex items-center gap-1 md:gap-2">
+    <nav class="hidden md:flex items-center gap-1 md:gap-2">
       {links.map((l) => (
         <a
           href={l.href}
@@ -33,5 +33,47 @@ const links = [
         >{l.label}</a>
       ))}
     </nav>
+    <button
+      type="button"
+      id="nav-toggle"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-nav-panel"
+      class="md:hidden inline-flex items-center justify-center rounded-md p-2 text-[var(--color-ink)] hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+    >
+      <svg id="nav-icon-open" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg id="nav-icon-close" class="hidden w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+    </button>
   </div>
+  <nav id="mobile-nav-panel" class="md:hidden hidden border-t border-[var(--color-border)] bg-[var(--color-paper)]">
+    <div class="max-w-6xl mx-auto px-4 py-2 flex flex-col">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class:list={[
+            'px-3 py-2.5 rounded-md text-sm font-medium transition-colors',
+            isActive(l.href)
+              ? 'bg-[var(--color-ink)] text-[var(--color-paper)]'
+              : 'text-[var(--color-ink-soft)] hover:text-[var(--color-ink)] hover:bg-black/5',
+          ]}
+        >{l.label}</a>
+      ))}
+    </div>
+  </nav>
 </header>
+<script>
+  const btn = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav-panel');
+  const iconOpen = document.getElementById('nav-icon-open');
+  const iconClose = document.getElementById('nav-icon-close');
+  if (btn && panel && iconOpen && iconClose) {
+    btn.addEventListener('click', () => {
+      const open = panel.classList.toggle('hidden');
+      const expanded = !open;
+      btn.setAttribute('aria-expanded', String(expanded));
+      btn.setAttribute('aria-label', expanded ? 'Close menu' : 'Open menu');
+      iconOpen.classList.toggle('hidden', expanded);
+      iconClose.classList.toggle('hidden', !expanded);
+    });
+  }
+</script>

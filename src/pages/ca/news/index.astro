@@ -17,7 +17,33 @@ const start = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 0));
 const dayOfYear = Math.floor((Date.now() - start.getTime()) / 86_400_000);
 const featured = editorials.length > 0 ? editorials[dayOfYear % editorials.length] : null;
 const restEditorials = featured ? editorials.filter((e) => e.id !== featured.id) : [];
-const feed = [...restEditorials, ...scraped];
+
+// Interleave scraped items so the same source can't appear more than twice in a row.
+// Otherwise Electrek's BYD-tagged feed dominates visually and the page reads single-sourced.
+type ScrapedItem = (typeof scraped)[number];
+function interleaveBySource(items: ScrapedItem[], maxRun = 2): ScrapedItem[] {
+  const remaining = [...items];
+  const out: ScrapedItem[] = [];
+  let lastSource = '';
+  let runLen = 0;
+  while (remaining.length > 0) {
+    let pickIdx = remaining.findIndex((i) =>
+      i.data.source !== lastSource || runLen < maxRun,
+    );
+    if (pickIdx === -1) pickIdx = 0;
+    const [picked] = remaining.splice(pickIdx, 1);
+    if (picked.data.source === lastSource) {
+      runLen += 1;
+    } else {
+      lastSource = picked.data.source;
+      runLen = 1;
+    }
+    out.push(picked);
+  }
+  return out;
+}
+const interleaved = interleaveBySource(scraped, 2);
+const feed = [...restEditorials, ...interleaved];
 ---
 <BaseLayout
   title="BYD Canada News — BYD Finder"
