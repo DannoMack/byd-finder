@@ -10,20 +10,25 @@ interface Env {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+function sanitizeSource(raw: string | null | undefined): string {
+  return (raw || 'unknown').trim().toLowerCase().replace(/[^a-z0-9:_-]/g, '').slice(0, 64) || 'unknown';
+}
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   try {
     const contentType = request.headers.get('content-type') || '';
     let email = '';
-    let source = 'unknown';
+    const querySource = sanitizeSource(new URL(request.url).searchParams.get('source'));
+    let source = querySource;
 
     if (contentType.includes('application/json')) {
       const body = (await request.json()) as { email?: string; source?: string };
       email = (body.email || '').trim().toLowerCase();
-      source = (body.source || 'unknown').slice(0, 32);
+      source = sanitizeSource(body.source || querySource);
     } else {
       const form = await request.formData();
       email = String(form.get('email') || '').trim().toLowerCase();
-      source = String(form.get('source') || 'unknown').slice(0, 32);
+      source = sanitizeSource(String(form.get('source') || querySource));
     }
 
     if (!email || !EMAIL_RE.test(email) || email.length > 254) {

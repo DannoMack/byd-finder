@@ -35,6 +35,8 @@ Pulls RSS from Electrek, InsideEVs, Driving.ca, Drive Tesla — filters for BYD 
 - `src/content/news/` — aggregated news (managed by scraper)
 - `src/content/reviews/` — hand-curated YouTube reviews
 - `src/content/models/` — BYD model spec pages
+- `src/content/comparisons/` — BYD-vs-competitor landing pages
+- `src/data/provincial-assumptions.json` — static Canadian utility / gas assumptions for comparison content
 
 Schemas: `src/content.config.ts`
 
@@ -45,6 +47,8 @@ Auto-deploys on push to `main` via Cloudflare Pages. Custom domains (bydfinder.c
 ## Environment variables
 
 - `PUBLIC_ADSENSE_CLIENT` (optional) — AdSense publisher ID, enables ad units when set.
+- `OPENAI_API_KEY` (optional) — enables AI-written "What this means for Canada" blurbs during news scraping.
+- `OPENAI_MODEL` (optional) — override the model used by the scraper blurb helper.
 
 ## License
 

@@ -61,10 +61,51 @@ const models = defineCollection({
     rangeKm: z.number().optional(),
     batteryKWh: z.number().optional(),
     driveTrain: z.string().optional(),
+    dcFastChargeKw: z.number().optional(),
+    efficiencyKWhPer100Km: z.number().optional(),
+    winterRangeLossPct: z.number().optional(),
+    insurancePerYearCAD: z.number().optional(),
+    maintenancePerYearCAD: z.number().optional(),
+    depreciationPct5yr: z.number().optional(),
     availableInCanada: z.boolean().default(false),
     heroImage: z.string().optional(),
     order: z.number().default(100),
   }),
 });
 
-export const collections = { news, reviews, models };
+const comparisons = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/comparisons' }),
+  schema: z.object({
+    title: z.string(),
+    slug: z.string(),
+    summary: z.string(),
+    bydModelSlug: z.string(),
+    targetBuyer: z.string(),
+    specRows: z.array(z.object({
+      label: z.string(),
+      byd: z.string(),
+      competitor: z.string(),
+    })).default([]),
+    competitor: z.object({
+      name: z.string(),
+      slug: z.string(),
+      bodyStyle: z.string(),
+      priceFromCAD: z.number(),
+      rangeKm: z.number(),
+      batteryKWh: z.number(),
+      driveTrain: z.string(),
+      dcFastChargeKw: z.number(),
+      efficiencyKWhPer100Km: z.number(),
+      winterRangeLossPct: z.number(),
+      insurancePerYearCAD: z.number(),
+      maintenancePerYearCAD: z.number(),
+      depreciationPct5yr: z.number(),
+    }),
+    cta: z.object({
+      heading: z.string(),
+      body: z.string(),
+    }),
+  }),
+});
+
+export const collections = { news, reviews, models, comparisons };

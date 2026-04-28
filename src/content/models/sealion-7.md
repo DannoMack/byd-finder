@@ -2,9 +2,16 @@
 name: "Sealion 7"
 slug: "sealion-7"
 bodyStyle: "Mid-size SUV"
+priceFromCAD: 58990
 rangeKm: 520
 batteryKWh: 82
 driveTrain: "RWD or AWD"
+dcFastChargeKw: 150
+efficiencyKWhPer100Km: 18.4
+winterRangeLossPct: 0.28
+insurancePerYearCAD: 2550
+maintenancePerYearCAD: 490
+depreciationPct5yr: 0.47
 availableInCanada: false
 order: 40
 ---

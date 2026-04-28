@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "currency": "CAD",
+    "years": 5,
+    "annualKmDefault": 20000,
+    "chargingLossPct": 0.1,
+    "notes": [
+      "Static planning assumptions for comparison content, not live utility or pump data.",
+      "Electricity rates reflect blended residential charging assumptions.",
+      "Gas prices are stored for future ICE comparisons and market context, but the current EV-vs-EV TCO calculator uses electricity, insurance, maintenance, and depreciation only."
+    ]
+  },
+  "provinces": {
+    "on": {
+      "name": "Ontario",
+      "electricityCentsPerKWh": 13.2,
+      "gasPricePerLitre": 1.58,
+      "insuranceMultiplier": 1.04
+    },
+    "qc": {
+      "name": "Quebec",
+      "electricityCentsPerKWh": 7.8,
+      "gasPricePerLitre": 1.64,
+      "insuranceMultiplier": 0.88
+    },
+    "bc": {
+      "name": "British Columbia",
+      "electricityCentsPerKWh": 12.4,
+      "gasPricePerLitre": 1.82,
+      "insuranceMultiplier": 0.96
+    },
+    "ab": {
+      "name": "Alberta",
+      "electricityCentsPerKWh": 16.8,
+      "gasPricePerLitre": 1.47,
+      "insuranceMultiplier": 1
+    }
+  }
+}

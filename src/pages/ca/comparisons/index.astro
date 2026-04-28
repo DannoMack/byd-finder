@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const comparisons = (await getCollection('comparisons'))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+<BaseLayout
+  title="BYD Canada Comparisons — BYD Finder"
+  description="High-intent BYD comparison pages for Canadian EV buyers: specs, winter range, and five-year ownership cost."
+>
+  <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="max-w-3xl">
+      <div class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">Comparison Hub</div>
+      <h1 class="mt-2 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">BYD vs the Canadian EV shortlist</h1>
+      <p class="mt-4 text-lg text-[var(--color-ink-soft)]">Specs are cheap. Ownership math is what converts buyers. These pages compare BYD models against the EVs Canadians already know.</p>
+    </div>
+
+    <div class="mt-10 grid gap-6 lg:grid-cols-3">
+      {comparisons.map((entry) => (
+        <article class="rounded-3xl border border-[var(--color-border)] bg-white p-6">
+          <div class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">Comparison</div>
+          <h2 class="mt-2 text-2xl font-semibold tracking-tight text-[var(--color-ink)]">
+            <a href={`/ca/comparisons/${entry.data.slug}`} class="hover:text-[var(--color-accent)] transition-colors">{entry.data.title}</a>
+          </h2>
+          <p class="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">{entry.data.summary}</p>
+          <p class="mt-5 text-sm text-[var(--color-ink)]"><strong>Best for:</strong> {entry.data.targetBuyer}</p>
+          <a href={`/ca/comparisons/${entry.data.slug}`} class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-accent)] hover:underline">
+            See specs and TCO <span aria-hidden="true">&rarr;</span>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
