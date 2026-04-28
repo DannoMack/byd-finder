@@ -4,8 +4,20 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import NewsCard from '../../../components/NewsCard.astro';
 import NewsletterSignup from '../../../components/NewsletterSignup.astro';
 
-const allNews = (await getCollection('news'))
+const all = await getCollection('news');
+const editorials = all
+  .filter((i) => i.data.editorial)
+  .sort((a, b) => a.id.localeCompare(b.id));
+const scraped = all
+  .filter((i) => !i.data.editorial)
   .sort((a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime());
+
+// Deterministic per-day rotation across editorials so all builds in the same UTC day agree.
+const start = new Date(Date.UTC(new Date().getUTCFullYear(), 0, 0));
+const dayOfYear = Math.floor((Date.now() - start.getTime()) / 86_400_000);
+const featured = editorials.length > 0 ? editorials[dayOfYear % editorials.length] : null;
+const restEditorials = featured ? editorials.filter((e) => e.id !== featured.id) : [];
+const feed = [...restEditorials, ...scraped];
 ---
 <BaseLayout
   title="BYD Canada News — BYD Finder"
@@ -17,13 +29,27 @@ const allNews = (await getCollection('news'))
       <p class="mt-2 text-[var(--color-muted)]">Aggregated BYD Canada coverage from trusted auto outlets, updated daily.</p>
     </div>
 
-    {allNews.length === 0 ? (
+    {feed.length === 0 && !featured ? (
       <div class="rounded-xl border border-dashed border-[var(--color-border)] bg-white p-10 text-center">
         <p class="text-[var(--color-muted)]">No news yet &mdash; scraper runs nightly. Check back tomorrow.</p>
       </div>
     ) : (
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {allNews.map((item) => (
+        {featured && (
+          <NewsCard
+            href={`/ca/news/${featured.id}`}
+            title={featured.data.title}
+            summary={featured.data.summary}
+            source={featured.data.source}
+            publishedAt={featured.data.publishedAt}
+            image={featured.data.image}
+            external={false}
+            editorial={true}
+            featured={true}
+            relatedLinks={featured.data.internalLinks}
+          />
+        )}
+        {feed.map((item) => (
           <NewsCard
             href={item.data.editorial ? `/ca/news/${item.id}` : item.data.sourceUrl}
             title={item.data.title}
@@ -32,6 +58,7 @@ const allNews = (await getCollection('news'))
             publishedAt={item.data.publishedAt}
             image={item.data.image}
             external={!item.data.editorial}
+            editorial={item.data.editorial}
             relatedLinks={item.data.internalLinks}
           />
         ))}

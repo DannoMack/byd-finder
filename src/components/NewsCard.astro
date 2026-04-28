@@ -7,17 +7,33 @@ interface Props {
   publishedAt: Date;
   image?: string;
   external?: boolean;
+  editorial?: boolean;
+  featured?: boolean;
   relatedLinks?: Array<{
     label: string;
     href: string;
     live: boolean;
   }>;
 }
-const { href, title, summary, source, publishedAt, image, external = false, relatedLinks = [] } = Astro.props;
+const {
+  href,
+  title,
+  summary,
+  source,
+  publishedAt,
+  image,
+  external = false,
+  editorial = false,
+  featured = false,
+  relatedLinks = [],
+} = Astro.props;
 const dateStr = publishedAt.toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric' });
 const liveLinks = relatedLinks.filter((link) => link.live).slice(0, 3);
+const cardClass = featured
+  ? 'group rounded-xl border-2 border-[var(--color-accent)] bg-white hover:border-[var(--color-ink)] transition-colors overflow-hidden md:col-span-2 lg:col-span-2'
+  : 'group rounded-xl border border-[var(--color-border)] bg-white hover:border-[var(--color-ink)] transition-colors overflow-hidden';
 ---
-<article class="group rounded-xl border border-[var(--color-border)] bg-white hover:border-[var(--color-ink)] transition-colors overflow-hidden">
+<article class={cardClass}>
   {image && (
     <div class="aspect-[16/9] overflow-hidden bg-[var(--color-paper)]">
       <a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
@@ -27,9 +43,15 @@ const liveLinks = relatedLinks.filter((link) => link.live).slice(0, 3);
   )}
   <div class="p-5">
     <div class="flex items-center gap-2 text-xs text-[var(--color-muted)] mb-2">
-      <span class="font-medium text-[var(--color-accent)] uppercase tracking-wider">{source}</span>
-      <span>&middot;</span>
-      <time datetime={publishedAt.toISOString()}>{dateStr}</time>
+      {editorial ? (
+        <span class="inline-flex items-center rounded-full bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white">Editorial</span>
+      ) : (
+        <>
+          <span class="font-medium text-[var(--color-accent)] uppercase tracking-wider">{source}</span>
+          <span>&middot;</span>
+          <time datetime={publishedAt.toISOString()}>{dateStr}</time>
+        </>
+      )}
       {external && <span class="ml-auto">&#8599;</span>}
     </div>
     <h3 class="text-lg font-semibold leading-snug text-[var(--color-ink)] transition-colors group-hover:text-[var(--color-accent)]">
