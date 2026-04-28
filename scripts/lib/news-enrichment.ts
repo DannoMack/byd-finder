@@ -5,6 +5,24 @@ const LIVE_COMPARISON_SLUGS = new Set([
   'dolphin-vs-leaf-canada',
 ]);
 
+export const BLURB_SYSTEM_PROMPT = `You write concise BYD Canada editorial blurbs.
+
+Rules:
+- 2-3 plain sentences. No markdown. No hype. No throat-clearing openers ("In a world where...", "Here's what...", "It's worth noting...").
+- No adverbs. No em-dashes. No "not X but Y" contrasts.
+- Use active voice. Every sentence has a human or concrete subject doing something specific. Avoid inanimate-thing-doing-human-verb patterns like "the decision emerges" or "the conversation becomes."
+- Be specific: name actual models, prices, provinces, dates. No vague declaratives like "the implications are significant" or "this matters."
+- Vary sentence length within the 2-3 sentences. Don't write three same-length sentences.
+- Trust the reader. State facts directly. No softening, justifying, or hand-holding.
+- No quotable summary lines. If a sentence sounds like a pull-quote, rewrite it.
+
+Examples:
+Before: "This matters in Canada because BYD's local launch depends on pricing discipline, dealer rollout, and policy timing."
+After: "BYD has 20 Canadian dealers signed and no pricing. Watch the Q2 announcement. Ontario Tesla Model 3 shoppers will compare both cars that week."
+
+Before: "Here's what Canadian buyers should know: the implications are significant."
+After: "Transport Canada has not published a compliance filing for the Seal. Quebec buyers cannot count on Roulez vert eligibility until BYD prices the car under the cap."`;
+
 export type EntityKind = 'byd-model' | 'competitor' | 'location' | 'policy';
 
 export interface EntityTag {
@@ -114,6 +132,20 @@ function normalizeBlurb(blurb: string): string {
   return blurb.replace(/\s+/g, ' ').trim().replace(/^"|"$/g, '');
 }
 
+function normalizeGeneratedBlurb(blurb: string | null | undefined): string | null {
+  if (!blurb) return null;
+
+  const normalized = normalizeBlurb(blurb);
+  if (!normalized) return null;
+
+  const sentences = normalized
+    .split(/(?<=[.!?])\s+/)
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  return sentences.length >= 2 && sentences.length <= 3 ? normalized : null;
+}
+
 function buildFallbackBlurb(title: string, content: string, enrichment: Omit<NewsEnrichment, 'canadaBlurb'>): string {
   const bydModels = enrichment.entityTags.filter((tag) => tag.kind === 'byd-model').map((tag) => tag.label);
   const competitors = enrichment.entityTags.filter((tag) => tag.kind === 'competitor').map((tag) => tag.label);
@@ -164,8 +196,7 @@ async function generateCanadaBlurbWithOpenAI(
       messages: [
         {
           role: 'system',
-          content:
-            'You write concise BYD Canada editorial blurbs. Respond with only 2-3 plain sentences. No markdown. No hype.',
+          content: BLURB_SYSTEM_PROMPT,
         },
         {
           role: 'user',
@@ -191,7 +222,76 @@ async function generateCanadaBlurbWithOpenAI(
     choices?: Array<{ message?: { content?: string | null } }>;
   };
   const message = data.choices?.[0]?.message?.content;
-  return message ? normalizeBlurb(message) : null;
+  return normalizeGeneratedBlurb(message);
+}
+
+async function generateCanadaBlurbWithGemini(
+  title: string,
+  summary: string,
+  content: string,
+  enrichment: Omit<NewsEnrichment, 'canadaBlurb'>,
+): Promise<string | null> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        system_instruction: {
+          parts: [
+            {
+              text: BLURB_SYSTEM_PROMPT,
+            },
+          ],
+        },
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: JSON.stringify({
+                  task: 'Write a "What this means for Canada" blurb for this BYD news item.',
+                  title,
+                  summary,
+                  excerpt: content.slice(0, 900),
+                  entityTags: enrichment.entityTags,
+                  comparisonPrompts: enrichment.comparisonPrompts,
+                }),
+              },
+            ],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.3,
+        },
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`Gemini error ${response.status}: ${body}`);
+  }
+
+  const data = (await response.json()) as {
+    candidates?: Array<{
+      content?: {
+        parts?: Array<{ text?: string | null }>;
+      };
+    }>;
+  };
+  const message = data.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text ?? '')
+    .join('')
+    .trim();
+
+  return normalizeGeneratedBlurb(message);
 }
 
 export async function enrichNewsItem(title: string, summary: string, content: string): Promise<NewsEnrichment> {
@@ -277,7 +377,13 @@ export async function enrichNewsItem(title: string, summary: string, content: st
   };
 
   try {
-    const llmBlurb = await generateCanadaBlurbWithOpenAI(title, summary, content, baseEnrichment);
+    let llmBlurb: string | null = null;
+    if (process.env.GEMINI_API_KEY) {
+      llmBlurb = await generateCanadaBlurbWithGemini(title, summary, content, baseEnrichment);
+    } else if (process.env.OPENAI_API_KEY) {
+      llmBlurb = await generateCanadaBlurbWithOpenAI(title, summary, content, baseEnrichment);
+    }
+
     if (llmBlurb) {
       return {
         ...baseEnrichment,
