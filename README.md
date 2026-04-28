@@ -47,8 +47,18 @@ Auto-deploys on push to `main` via Cloudflare Pages. Custom domains (bydfinder.c
 ## Environment variables
 
 - `PUBLIC_ADSENSE_CLIENT` (optional) — AdSense publisher ID, enables ad units when set.
-- `OPENAI_API_KEY` (optional) — enables AI-written "What this means for Canada" blurbs during news scraping.
-- `OPENAI_MODEL` (optional) — override the model used by the scraper blurb helper.
+- `GEMINI_API_KEY` (optional, preferred) — enables Gemini-written "What this means for Canada" blurbs during news scraping.
+- `GEMINI_MODEL` (optional) — override the Gemini model used by the scraper blurb helper. Defaults to `gemini-2.5-flash`, which is on the Gemini Developer API free tier.
+- `OPENAI_API_KEY` (optional, fallback) — enables OpenAI-written blurbs when `GEMINI_API_KEY` is not set.
+- `OPENAI_MODEL` (optional) — override the OpenAI model used by the scraper blurb helper.
+
+Blurb selection precedence during scraping:
+
+- Gemini via `GEMINI_API_KEY`
+- OpenAI via `OPENAI_API_KEY`
+- Deterministic template fallback when both keys are missing, the configured provider errors, or the model returns no usable blurb
+
+For this scraper volume, Gemini's no-card free tier is sufficient for the nightly run. To use Gemini in the scheduled GitHub Actions scrape, add `GEMINI_API_KEY` to the repository's Actions secrets in GitHub settings. The workflow also passes through `OPENAI_API_KEY` if you want the OpenAI fallback path available in environments where Gemini is not configured.
 
 ## License
 
