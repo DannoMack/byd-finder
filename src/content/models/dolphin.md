@@ -2,9 +2,16 @@
 name: "Dolphin"
 slug: "dolphin"
 bodyStyle: "Compact hatchback"
+priceFromCAD: 34990
 rangeKm: 340
 batteryKWh: 44
 driveTrain: "Single motor FWD"
+dcFastChargeKw: 80
+efficiencyKWhPer100Km: 14.8
+winterRangeLossPct: 0.31
+insurancePerYearCAD: 2140
+maintenancePerYearCAD: 390
+depreciationPct5yr: 0.44
 availableInCanada: false
 order: 20
 ---

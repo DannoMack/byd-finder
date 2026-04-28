@@ -5,13 +5,20 @@
 interface Props {
   heading?: string;
   subheading?: string;
+  campaign?: string;
 }
 const {
   heading = 'Compare EV insurance quotes in under 2 minutes',
   subheading = 'Ratehub compares Canadian insurers side-by-side. Free quote, no account required.',
+  campaign = 'sitewide',
 } = Astro.props;
 
-const RATEHUB_URL = '#'; // TODO: paste Ratehub affiliate URL
+const ratehubUrl = new URL('https://www.ratehub.ca/insurance/auto-insurance');
+ratehubUrl.searchParams.set('utm_source', 'bydfinder');
+ratehubUrl.searchParams.set('utm_medium', 'affiliate');
+ratehubUrl.searchParams.set('utm_campaign', campaign);
+// TODO: When DannoMack provides the real Ratehub affiliate/ref ID, append it here.
+const RATEHUB_URL = ratehubUrl.toString();
 ---
 <aside class="rounded-2xl border border-[var(--color-border)] bg-white p-6 md:p-7">
   <div class="flex items-start gap-4">
@@ -20,15 +27,9 @@ const RATEHUB_URL = '#'; // TODO: paste Ratehub affiliate URL
       <div class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">Sponsored by Ratehub</div>
       <h3 class="mt-1 text-lg font-semibold text-[var(--color-ink)]">{heading}</h3>
       <p class="mt-1 text-sm text-[var(--color-ink-soft)]">{subheading}</p>
-      {RATEHUB_URL === '#' ? (
-        <span class="mt-3 inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold bg-[var(--color-paper)] text-[var(--color-muted)] border border-[var(--color-border)]">
-          Link coming soon
-        </span>
-      ) : (
-        <a href={RATEHUB_URL} target="_blank" rel="sponsored noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-[#0055a5] text-white hover:bg-[#004080] transition-colors">
-          Get a free quote <span aria-hidden="true">&rarr;</span>
-        </a>
-      )}
+      <a href={RATEHUB_URL} target="_blank" rel="sponsored noopener noreferrer" class="mt-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold bg-[#0055a5] text-white hover:bg-[#004080] transition-colors">
+        Get a free quote <span aria-hidden="true">&rarr;</span>
+      </a>
     </div>
   </div>
 </aside>

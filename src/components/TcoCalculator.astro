@@ -1,0 +1,175 @@
+---
+import {
+  TCO_ASSUMPTIONS,
+  calculateFiveYearTco,
+  estimateWinterRangeKm,
+  formatCurrency,
+  type VehicleTcoInput,
+} from '../utils/tco';
+
+interface Props {
+  vehicles: VehicleTcoInput[];
+  heading?: string;
+  subheading?: string;
+  id?: string;
+}
+
+const {
+  vehicles,
+  heading = '5-year EV ownership calculator',
+  subheading = 'Adjust province and annual kilometres to see how depreciation, charging, insurance, and maintenance change the total.',
+  id = 'tco-calculator',
+} = Astro.props;
+
+const provinceEntries = Object.entries(TCO_ASSUMPTIONS.provinces);
+const defaultProvinceSlug = provinceEntries[0]?.[0] || 'on';
+const defaultProvince = TCO_ASSUMPTIONS.provinces[defaultProvinceSlug as keyof typeof TCO_ASSUMPTIONS.provinces];
+const defaultAnnualKm = TCO_ASSUMPTIONS.meta.annualKmDefault;
+const initialResults = vehicles.map((vehicle) => ({
+  vehicle,
+  tco: calculateFiveYearTco(vehicle, defaultProvince, defaultAnnualKm),
+  winterRangeKm: estimateWinterRangeKm(vehicle),
+}));
+const payload = {
+  vehicles,
+  assumptions: TCO_ASSUMPTIONS,
+};
+const formatUnitPrice = (value: number) => `$${value.toFixed(2)}`;
+---
+<section
+  id={id}
+  class="rounded-3xl border border-[var(--color-border)] bg-white p-6 md:p-8"
+  data-tco-calculator
+  data-tco-payload={JSON.stringify(payload)}
+>
+  <div class="max-w-3xl">
+    <div class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">Interactive Calculator</div>
+    <h2 class="mt-2 text-2xl md:text-3xl font-semibold tracking-tight text-[var(--color-ink)]">{heading}</h2>
+    <p class="mt-2 text-sm md:text-base text-[var(--color-ink-soft)]">{subheading}</p>
+  </div>
+
+  <div class="mt-6 grid gap-4 md:grid-cols-2">
+    <label class="block">
+      <span class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">Province</span>
+      <select
+        class="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-paper)] px-4 py-3 text-[var(--color-ink)] focus:border-[var(--color-accent)] focus:outline-none"
+        data-tco-province
+      >
+        {provinceEntries.map(([slug, province]) => (
+          <option value={slug}>{province.name}</option>
+        ))}
+      </select>
+    </label>
+    <label class="block">
+      <span class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">Annual kilometres</span>
+      <input
+        type="number"
+        min="8000"
+        max="40000"
+        step="1000"
+        value={defaultAnnualKm}
+        class="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-[var(--color-paper)] px-4 py-3 text-[var(--color-ink)] focus:border-[var(--color-accent)] focus:outline-none"
+        data-tco-km
+      />
+    </label>
+  </div>
+
+  <div class="mt-6 rounded-2xl border border-[var(--color-border)] bg-[var(--color-paper)] px-4 py-3 text-sm text-[var(--color-ink-soft)]">
+    Provincial planning assumptions: <span data-tco-assumption-copy>{defaultProvince.name} at {defaultProvince.electricityCentsPerKWh}¢/kWh and {formatUnitPrice(defaultProvince.gasPricePerLitre)}/L gas marker.</span>
+  </div>
+
+  <div class="mt-6 grid gap-4 lg:grid-cols-2" data-tco-results>
+    {initialResults.map(({ vehicle, tco, winterRangeKm }) => (
+      <article class="rounded-2xl border border-[var(--color-border)] bg-[var(--color-paper)] p-5" data-tco-card>
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">{vehicle.bodyStyle}</div>
+            <h3 class="mt-1 text-xl font-semibold text-[var(--color-ink)]">{vehicle.name}</h3>
+          </div>
+          <div class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-[var(--color-accent)]">{winterRangeKm} km winter est.</div>
+        </div>
+        <dl class="mt-5 space-y-3 text-sm">
+          <div class="flex items-center justify-between gap-4">
+            <dt class="text-[var(--color-ink-soft)]">Depreciation</dt>
+            <dd class="font-semibold text-[var(--color-ink)]" data-field="depreciation">{formatCurrency(tco.depreciation)}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <dt class="text-[var(--color-ink-soft)]">Electricity</dt>
+            <dd class="font-semibold text-[var(--color-ink)]" data-field="electricity">{formatCurrency(tco.electricity)}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <dt class="text-[var(--color-ink-soft)]">Insurance</dt>
+            <dd class="font-semibold text-[var(--color-ink)]" data-field="insurance">{formatCurrency(tco.insurance)}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <dt class="text-[var(--color-ink-soft)]">Maintenance</dt>
+            <dd class="font-semibold text-[var(--color-ink)]" data-field="maintenance">{formatCurrency(tco.maintenance)}</dd>
+          </div>
+          <div class="flex items-center justify-between gap-4 border-t border-[var(--color-border)] pt-3">
+            <dt class="text-[var(--color-ink)] font-semibold">5-year total</dt>
+            <dd class="text-lg font-semibold text-[var(--color-ink)]" data-field="total">{formatCurrency(tco.total)}</dd>
+          </div>
+        </dl>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script type="module">
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat('en-CA', {
+      style: 'currency',
+      currency: 'CAD',
+      maximumFractionDigits: 0,
+    }).format(value);
+  const formatUnitPrice = (value) => `$${Number(value).toFixed(2)}`;
+
+  const calculateFiveYearTco = (vehicle, province, assumptions, annualKm) => {
+    const years = assumptions.meta.years;
+    const chargingLossMultiplier = 1 + assumptions.meta.chargingLossPct;
+    const depreciation = vehicle.priceFromCAD * vehicle.depreciationPct5yr;
+    const electricity = ((annualKm / 100) * vehicle.efficiencyKWhPer100Km * chargingLossMultiplier)
+      * years
+      * (province.electricityCentsPerKWh / 100);
+    const insurance = vehicle.insurancePerYearCAD * province.insuranceMultiplier * years;
+    const maintenance = vehicle.maintenancePerYearCAD * years;
+    return {
+      depreciation,
+      electricity,
+      insurance,
+      maintenance,
+      total: depreciation + electricity + insurance + maintenance,
+    };
+  };
+
+  document.querySelectorAll('[data-tco-calculator]').forEach((root) => {
+    const payload = JSON.parse(root.dataset.tcoPayload || '{}');
+    const provinceSelect = root.querySelector('[data-tco-province]');
+    const kmInput = root.querySelector('[data-tco-km]');
+    const cards = [...root.querySelectorAll('[data-tco-card]')];
+    const assumptionCopy = root.querySelector('[data-tco-assumption-copy]');
+
+    const render = () => {
+      const province = payload.assumptions.provinces[provinceSelect.value];
+      const annualKm = Math.max(8000, Math.min(40000, Number(kmInput.value) || payload.assumptions.meta.annualKmDefault));
+      kmInput.value = String(annualKm);
+
+      if (assumptionCopy) {
+        assumptionCopy.textContent = `${province.name} at ${province.electricityCentsPerKWh}¢/kWh and ${formatUnitPrice(province.gasPricePerLitre)}/L gas marker.`;
+      }
+
+      cards.forEach((card, index) => {
+        const result = calculateFiveYearTco(payload.vehicles[index], province, payload.assumptions, annualKm);
+        card.querySelector('[data-field="depreciation"]').textContent = formatCurrency(result.depreciation);
+        card.querySelector('[data-field="electricity"]').textContent = formatCurrency(result.electricity);
+        card.querySelector('[data-field="insurance"]').textContent = formatCurrency(result.insurance);
+        card.querySelector('[data-field="maintenance"]').textContent = formatCurrency(result.maintenance);
+        card.querySelector('[data-field="total"]').textContent = formatCurrency(result.total);
+      });
+    };
+
+    provinceSelect.addEventListener('change', render);
+    kmInput.addEventListener('input', render);
+    render();
+  });
+</script>

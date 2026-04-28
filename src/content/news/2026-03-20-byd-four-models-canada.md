@@ -5,6 +5,18 @@ source: "GlobalChinaEV"
 sourceUrl: "https://www.globalchinaev.com/post/byd-readies-four-models-for-canadian-market-entry"
 publishedAt: 2026-03-20
 tags: ["models", "lineup", "launch"]
+entityTags:
+  - label: "Toronto"
+    slug: "toronto"
+    kind: "location"
+internalLinks:
+  - label: "Toronto"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+comparisonPrompts: []
+canadaBlurb: "A four-model launch matters in Canada because it suggests BYD is not testing the market with a single halo car. Toronto is likely the first real proof point, but the bigger takeaway is segment coverage: hatchback, crossover, sedan, and SUV gives BYD more ways to hit Canadian price brackets. Buyers should watch which trims get heat pumps, battery sizes, and winter-focused equipment first."
 country: "ca"
 ---
 

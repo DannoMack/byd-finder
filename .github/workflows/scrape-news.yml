@@ -24,6 +24,9 @@ jobs:
 
       - name: Run scraper
         run: npx tsx scripts/scrape-news.ts
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Commit new articles
         run: |

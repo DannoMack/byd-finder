@@ -5,6 +5,66 @@ source: "Electrek"
 sourceUrl: "https://electrek.co/2026/03/24/byd-plans-20-canadian-dealerships-toronto-first/"
 publishedAt: 2026-03-24
 tags: ["launch", "dealerships", "toronto", "tariffs"]
+entityTags:
+  - label: "Calgary"
+    slug: "calgary"
+    kind: "location"
+  - label: "Import tariff"
+    slug: "import-tariff"
+    kind: "policy"
+  - label: "Markham"
+    slug: "markham"
+    kind: "location"
+  - label: "Montreal"
+    slug: "montreal"
+    kind: "location"
+  - label: "Ontario"
+    slug: "ontario"
+    kind: "location"
+  - label: "Toronto"
+    slug: "toronto"
+    kind: "location"
+  - label: "Vancouver"
+    slug: "vancouver"
+    kind: "location"
+internalLinks:
+  - label: "Calgary"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+  - label: "Import tariff"
+    href: "/ca/faq"
+    slug: "faq"
+    kind: "policy"
+    live: true
+  - label: "Markham"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+  - label: "Montreal"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+  - label: "Ontario"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+  - label: "Toronto"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+  - label: "Vancouver"
+    href: "/ca/dealers"
+    slug: "dealers"
+    kind: "location"
+    live: true
+comparisonPrompts: []
+canadaBlurb: "This is a stronger Canada signal than a generic launch rumour because dealer count, cities, and tariff math affect actual deliveries. Toronto comes first, but Vancouver, Montreal, and Calgary matter because BYD needs national retail coverage to look credible against established EV brands. The tariff gap versus the U.S. is the pricing window that could let BYD stay aggressive here even before Canadian volume scales."
 country: "ca"
 ---
 

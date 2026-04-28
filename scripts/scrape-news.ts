@@ -16,6 +16,7 @@ import { writeFile, readdir, readFile } from 'node:fs/promises';
 import { existsSync, mkdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { enrichNewsItem, type ComparisonPrompt, type EntityTag, type InternalLinkSuggestion } from './lib/news-enrichment.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = join(__dirname, '..');
@@ -87,6 +88,53 @@ function yamlEscape(s: string): string {
   return s.replace(/"/g, '\\"').replace(/\n/g, ' ').trim();
 }
 
+function yamlString(value: string): string {
+  return `"${yamlEscape(value)}"`;
+}
+
+function yamlObjectArray(name: string, items: Array<Record<string, string | boolean>>): string[] {
+  if (items.length === 0) return [`${name}: []`];
+  return [
+    `${name}:`,
+    ...items.flatMap((item) => {
+      const entries = Object.entries(item);
+      return entries.map(([key, value], index) => {
+        const rendered = typeof value === 'boolean' ? String(value) : yamlString(String(value));
+        return `${index === 0 ? '  -' : '   '} ${key}: ${rendered}`;
+      });
+    }),
+  ];
+}
+
+function serializeEntityTags(items: EntityTag[]): string[] {
+  return yamlObjectArray('entityTags', items.map((item) => ({
+    label: item.label,
+    slug: item.slug,
+    kind: item.kind,
+  })));
+}
+
+function serializeInternalLinks(items: InternalLinkSuggestion[]): string[] {
+  return yamlObjectArray('internalLinks', items.map((item) => ({
+    label: item.label,
+    href: item.href,
+    slug: item.slug,
+    kind: item.kind,
+    live: item.live,
+  })));
+}
+
+function serializeComparisonPrompts(items: ComparisonPrompt[]): string[] {
+  return yamlObjectArray('comparisonPrompts', items.map((item) => ({
+    bydModel: item.bydModel,
+    competitor: item.competitor,
+    slug: item.slug,
+    href: item.href,
+    title: item.title,
+    live: item.live,
+  })));
+}
+
 async function loadExistingUrls(): Promise<Set<string>> {
   if (!existsSync(OUTPUT_DIR)) return new Set();
   const files = await readdir(OUTPUT_DIR);
@@ -143,17 +191,22 @@ async function main() {
         const image = extractImage(item);
         const dateStr = date.toISOString().slice(0, 10);
         const filename = `${dateStr}-${slugify(title)}.md`;
+        const enrichment = await enrichNewsItem(title, summary, content);
 
         const frontmatter = [
           '---',
-          `title: "${yamlEscape(title)}"`,
-          `summary: "${yamlEscape(summary)}"`,
-          `source: "${yamlEscape(source.name)}"`,
-          `sourceUrl: "${url}"`,
-          item.creator ? `author: "${yamlEscape(item.creator)}"` : null,
+          `title: ${yamlString(title)}`,
+          `summary: ${yamlString(summary)}`,
+          `source: ${yamlString(source.name)}`,
+          `sourceUrl: ${yamlString(url)}`,
+          item.creator ? `author: ${yamlString(item.creator)}` : null,
           `publishedAt: ${date.toISOString()}`,
-          image ? `image: "${image}"` : null,
-          `country: "${isCanadian ? 'ca' : 'global'}"`,
+          image ? `image: ${yamlString(image)}` : null,
+          `country: ${yamlString(isCanadian ? 'ca' : 'global')}`,
+          ...serializeEntityTags(enrichment.entityTags),
+          ...serializeInternalLinks(enrichment.internalLinks),
+          ...serializeComparisonPrompts(enrichment.comparisonPrompts),
+          `canadaBlurb: ${yamlString(enrichment.canadaBlurb)}`,
           '---',
           '',
           content.slice(0, 1200),

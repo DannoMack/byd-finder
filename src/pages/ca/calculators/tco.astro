@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import NewsletterSignup from '../../../components/NewsletterSignup.astro';
+import TcoCalculator from '../../../components/TcoCalculator.astro';
+import {
+  type VehicleTcoInput,
+} from '../../../utils/tco';
+
+const models = await getCollection('models');
+const seal = models.find((model) => model.data.slug === 'seal');
+
+if (!seal) {
+  throw new Error('Missing Seal model content for TCO calculator');
+}
+
+const vehicles: VehicleTcoInput[] = [
+  {
+    name: 'BYD Seal',
+    slug: 'seal',
+    bodyStyle: seal.data.bodyStyle,
+    priceFromCAD: seal.data.priceFromCAD || 0,
+    rangeKm: seal.data.rangeKm || 0,
+    batteryKWh: seal.data.batteryKWh || 0,
+    driveTrain: seal.data.driveTrain || 'TBD',
+    dcFastChargeKw: seal.data.dcFastChargeKw || 0,
+    efficiencyKWhPer100Km: seal.data.efficiencyKWhPer100Km || 0,
+    winterRangeLossPct: seal.data.winterRangeLossPct || 0,
+    insurancePerYearCAD: seal.data.insurancePerYearCAD || 0,
+    maintenancePerYearCAD: seal.data.maintenancePerYearCAD || 0,
+    depreciationPct5yr: seal.data.depreciationPct5yr || 0,
+  },
+  {
+    name: 'Tesla Model 3',
+    slug: 'model-3',
+    bodyStyle: 'Mid-size sedan',
+    priceFromCAD: 54990,
+    rangeKm: 584,
+    batteryKWh: 75,
+    driveTrain: 'RWD or AWD',
+    dcFastChargeKw: 250,
+    efficiencyKWhPer100Km: 15.3,
+    winterRangeLossPct: 0.25,
+    insurancePerYearCAD: 2620,
+    maintenancePerYearCAD: 420,
+    depreciationPct5yr: 0.43,
+  },
+];
+---
+<BaseLayout
+  title="EV Total Cost of Ownership Calculator — BYD Finder"
+  description="Interactive EV total cost of ownership calculator for Canadian buyers. Compare province, kilometres, and five-year ownership cost."
+>
+  <section class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="max-w-3xl">
+      <div class="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">Calculator</div>
+      <h1 class="mt-2 text-4xl md:text-5xl font-semibold tracking-tight text-[var(--color-ink)]">EV total cost of ownership for Canada</h1>
+      <p class="mt-4 text-lg text-[var(--color-ink-soft)]">This version ships one working calculator first: 5-year TCO for two EVs, with province-specific electricity and insurance assumptions.</p>
+    </div>
+
+    <div class="mt-10">
+      <TcoCalculator
+        vehicles={vehicles}
+        heading="Compare BYD Seal vs Tesla Model 3"
+        subheading="Use this as the baseline ownership funnel. Comparison pages reuse the same calculator with different vehicle pairs."
+      />
+    </div>
+
+    <div class="mt-12">
+      <NewsletterSignup
+        variant="inline"
+        source="calculator:tco"
+        heading="Want more Canadian EV calculators?"
+        subheading="We email when new BYD comparison tools and launch-price updates go live."
+      />
+    </div>
+  </section>
+</BaseLayout>

@@ -2,9 +2,16 @@
 name: "Atto 3"
 slug: "atto-3"
 bodyStyle: "Compact SUV"
+priceFromCAD: 44990
 rangeKm: 420
 batteryKWh: 60
 driveTrain: "Single motor FWD"
+dcFastChargeKw: 88
+efficiencyKWhPer100Km: 16.0
+winterRangeLossPct: 0.29
+insurancePerYearCAD: 2280
+maintenancePerYearCAD: 440
+depreciationPct5yr: 0.46
 availableInCanada: false
 order: 10
 ---

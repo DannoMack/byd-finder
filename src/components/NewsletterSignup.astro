@@ -3,12 +3,16 @@ interface Props {
   variant?: 'hero' | 'inline' | 'sidebar';
   heading?: string;
   subheading?: string;
+  source?: string;
 }
 const {
   variant = 'inline',
   heading = "Get BYD Canada updates before anyone else",
   subheading = "Launch dates, pre-order windows, price reveals, reviews. No spam, unsubscribe anytime.",
+  source,
 } = Astro.props;
+
+const signupSource = source || variant;
 
 const base = "rounded-2xl border border-[var(--color-border)]";
 const styles = {
@@ -43,7 +47,7 @@ const inputClass = variant === 'hero'
       placeholder="you@example.com"
       class={inputClass}
     />
-    <input type="hidden" name="source" value={variant} />
+    <input type="hidden" name="source" value={signupSource} />
     <button
       type="submit"
       class="px-5 py-3 rounded-lg bg-[var(--color-accent)] text-white font-semibold hover:bg-[var(--color-accent-dark)] transition-colors"
