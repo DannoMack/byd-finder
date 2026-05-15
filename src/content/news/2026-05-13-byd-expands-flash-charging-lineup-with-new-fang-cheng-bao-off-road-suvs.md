@@ -1,0 +1,18 @@
+---
+title: "BYD expands flash charging lineup with new Fang Cheng Bao off-road SUVs"
+summary: "Fang Cheng Bao launched the flash charging editions of the Bao 8 and Bao 5, both equipped with the second-generation Blade Battery and flash charging technology. For details, please visit CnEVPost."
+source: "CnEVPost"
+sourceUrl: "https://cnevpost.com/2026/05/13/byd-expands-flash-charging-lineup-new-fang-cheng-bao-suvs/"
+author: "Phate Zhang"
+publishedAt: 2026-05-13T13:11:34.000Z
+image: "https://cnevpost.com/wp-content/uploads/2026/05/2026051313064727.jpg"
+country: "global"
+entityTags: []
+internalLinks: []
+comparisonPrompts: []
+canadaBlurb: "This matters in Canada because BYD's local launch still depends on pricing discipline, dealer rollout, and policy timing. Watch for how quickly BYD turns global headlines into Canadian trim, price, and delivery details. The practical question is not whether BYD can build it, but how fast Canada gets dealers, approvals, and inventory."
+---
+
+Fang Cheng Bao launched the flash charging editions of the Bao 8 and Bao 5, both equipped with the second-generation Blade Battery and flash charging technology. For details, please visit CnEVPost.
+
+[Read the full article at CnEVPost](https://cnevpost.com/2026/05/13/byd-expands-flash-charging-lineup-new-fang-cheng-bao-suvs/)
